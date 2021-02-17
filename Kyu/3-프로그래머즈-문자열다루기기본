@@ -1,0 +1,13 @@
+# 시작시간: ---
+# 종료시간: ---
+# 날짜: 21.02.16
+
+# 1차 시도 - O(n)
+def solution(s):
+    if len(s) != 4 and len(s) != 6:
+        return False
+    return (s.isnumeric())
+
+# 2차 시도(모범 답안 참고) - O(n)
+def solution(s):
+    return s.isdigit() and len(s) in (4,6)
