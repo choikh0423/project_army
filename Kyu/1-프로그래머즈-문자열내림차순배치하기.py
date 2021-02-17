@@ -2,7 +2,7 @@
 # 종료시간: ---
 # 날짜: 21.02.16 - 21.02.17
 
-# 1차 시도 - O(?)
+# 1차 시도 - O(n^2)
 def solution(s):
     answer = ''
     # Insertion Sort()
