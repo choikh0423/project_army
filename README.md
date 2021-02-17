@@ -13,9 +13,9 @@ Enlisiting to the Korean Army has provided me with an extremely challenging envi
 
 점수 제도
 -------------
-> 1pt:
-> 3pt:
-> 5pt:
+* 1pt:
+* 3pt:
+* 5pt:
 
 Contributors
 -------------
