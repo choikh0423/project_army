@@ -1,6 +1,6 @@
 # Project_army
 
-This is a repository with algorithms and codes for solving coding problems from various websites(including, InterviewCake, Leetcode, Programmers, Baekjoon, etc.). The purpose of this repository is purely for the sake of keeping track of our achievements and at least try our best to commit daily.
+This is a repository with algorithms and codes for solving coding problems from various websites(including, InterviewCake, Leetcode, Programmers, Baekjoon, etc.). The purpose of this repository is purely for the sake of keeping track of our achievements and to keep ourselves disciplined as developers through our service.
 
 Background
 -------------
