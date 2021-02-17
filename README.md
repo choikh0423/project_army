@@ -4,7 +4,7 @@ This is a repository with algorithms and codes for solving coding problems from 
 
 Background
 -------------
-Enlisiting to the Korean Army has provided me with an extremely challenging environment to code. Limited access to electronic devices(around 2-3 hours a day) and computers w/o permission to access the terminal have prevented me from coding freely as I did before. Therefore, my friend, John and I have decided to record our daily coding challenges on github to keep track of our achievements and to have further discussions on the codes that we implemented. In the end of this project, we sincerely hope to see ourselves improve as computer scientists: improved computational thinking and problem solving skills.
+Enlisiting to the Korean Army has provided me with an extremely challenging environment to code. Limited access to electronic devices(around 2-3 hours a day) and computers w/o permission to access the terminal have prevented me from coding freely as I did before. Therefore, my friend, John and I have decided to record our daily coding challenges on github to keep track of our achievements and to have further discussions on the codes that we implemented.
 
 프로그래머를 위한 사용법
 -------------
