@@ -6,4 +6,31 @@
 def solution(s):
     return int(s)
 
-# 2차 시도(모범 답안 참고)
+## 2차 시도(Mapping 사용) - O(n)
+# w/o using int()
+def solution(s):
+    # Initialization 
+    str_lst = ['0', '1', '2', '3', '4', '5', '6', '7' ,'8', '9']
+    init_map = {}
+    
+    # Dictionary that maps string to int - O(1)
+    for i in range(10):
+        init_map[str_lst[i]] = i
+    
+    # String to int conversion
+    if s[0] == '-':
+        s_int = s[1:]
+        answer = int_calc(s_int, init_map) * -1
+    elif s[0] == '+':
+        s_int = s[1:]
+        answer = int_calc(s_int, init_map)
+    else:
+        answer = int_calc(s, init_map)
+    return answer
+
+# Function that maps each character to int and create a integer out of string - O(n)
+def int_calc(s, init_map):
+    final_int = 0
+    for j in range(len(s)):
+        final_int = final_int + init_map.get(s[len(s)-j-1]) * (10**j)
+    return final_int
