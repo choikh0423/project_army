@@ -5,7 +5,7 @@
 # 1차 시도 - O(n^2)
 def solution(s):
     answer = ''
-    # Insertion Sort()
+    # Similar form with selection sort, but not quite since the numbers don't swap
     for i in range(len(s)):
         count = i
         if answer == '':
