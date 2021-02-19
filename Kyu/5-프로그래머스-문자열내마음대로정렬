@@ -2,7 +2,31 @@
 # 종료시간: ---
 # 날짜: 21.02.18 - 
 
-# 1차 시도
+# 1차 시도 - Very unorganized code, need some more work on this.
+def solution(strings, n):
+    #Using insertion sort()
+    answer = []
+    for i in range(len(strings)):
+        count = i
+        if i == 0:
+            answer.append(strings[i])
+        else:
+            answer.append(strings[i])
+            while (count > 0 and answer[count][n] <= answer[count-1][n]):
+                if answer[count][n] == answer[count-1][n] and answer[count] < answer[count-1]:
+                    answer = swap(count, answer)
+                elif answer[count][n] < answer[count-1][n]:
+                    answer = swap(count, answer)
+                else:
+                    count = 0
+                count -= 1
+    return answer
+
+def swap(count, answer):
+    temp = answer[count]
+    answer[count] = answer[count-1]
+    answer[count-1] = temp
+    return answer
 
 
 # 2차 시도()
