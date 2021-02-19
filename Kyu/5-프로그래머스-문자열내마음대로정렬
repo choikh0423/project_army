@@ -3,7 +3,7 @@
 # 날짜: 21.02.18 - 21.02.19
 # 시간: approx. 40min
 
-# 1차 시도 - Very unorganized code, need some more work on this.
+# 1차 시도 - Very unorganized code, need some more work on this. 다시해보기
 def solution(strings, n):
     #Using insertion sort()
     answer = []
