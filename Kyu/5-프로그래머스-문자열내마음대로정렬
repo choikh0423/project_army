@@ -1,6 +1,7 @@
 # 시작시간: 21.02.18 19:08
-# 종료시간: ---
-# 날짜: 21.02.18 - 
+# 종료시간: 21.02.19 20:04
+# 날짜: 21.02.18 - 21.02.19
+# 시간: approx. 40min
 
 # 1차 시도 - Very unorganized code, need some more work on this.
 def solution(strings, n):
