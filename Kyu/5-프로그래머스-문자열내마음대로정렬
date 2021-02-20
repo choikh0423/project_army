@@ -30,8 +30,6 @@ def swap(count, answer):
     return answer
 
 
-# 2차 시도()
-
-
-# 3차 시도()
-
+# 2차 시도(O(nlogn))
+def solution(strings, n):
+    return sorted(strings, key=lambda x: (x[n], x))
