@@ -37,3 +37,80 @@
 // 점수와 등수 포함한 !구조체 student배열!을 만들고 그안에 input값을 넣는다.
 // 점수 등수를 포함하고 성적순으로 배치된 !단순 연결리스트(Ranking)!를 만든다.
 // 함수에 자신의 점수를 넣으면 Ranking 리스트에서 자신의 위치가 어디인지 파악하고 배열에 넣으며 Ranking에 등록한다. 
+
+#2021.02.21
+#start time : 2021.02.21 22:20
+#end time : 2021.02.19 22:43
+#43min
+
+#시도1
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct student{
+    int score;
+    int rank;
+}student;
+
+typedef struct rank_node{
+    int data;
+    int rank;
+    struct rank_node *link;
+}rank_node;
+
+typedef struct rank_h{
+    rank_node *H;
+}rank_h;
+
+int Ranking(rank_h *H,int score){
+    rank_node *n=(rank_node *)malloc(sizeof(rank_node));
+    n->data=score;
+    rank_node *p;
+    p=H;
+    if(p==NULL){ // 랭킹에 아무도 없을때
+        H=n;
+        n->rank=1;
+        n->link=NULL;
+        return n->rank; // 인풋 score의 등수를 반환해줌
+    }
+    if(H->data<=n->data){ // 제일 높은 점수가 들어왔을 때
+        H=n;
+        n->link=NULL;
+        n->rank=1;
+    }
+    else{
+        while(p->link->data>n->data){ // 포인터를 점수가 들어가야할 위치를 찾는 과정 (동점일 경우 제일 최신에 들어온 것이 젤앞에온다.)
+            p=p->link;
+        }
+        n->rank=p->rank+1;
+        n->link=p->link;
+        p->link=n;
+    }
+    while(n->data == p->data){ // 동점이 있으면 동점 끝에 노드부터 rank를 1씩 올리기위한 포인터 움직임.
+        p=p->link;
+    }
+    while(p->link!=NULL){//마지막 전 노드까지 rank를 1씩 증가시켜줌 
+        p->rank=p->rank+1;
+    }
+    p->rank=p->rank+1; //마지막 노드 rank를 1 증가시켜줌
+    return n->rank; // 인풋 score의 등수를 반환해줌
+}
+
+int main() {
+    int n;
+    scanf("%d",&n);
+    student* A=(student*)malloc(sizeof(student) * n);
+    rank_h *H=(rank_h*)malloc(sizeof(rank_h));
+    
+    for(int i=0;i<n;i++){
+        scanf("%d ",&A[i].score);
+    }
+     for(int i=0;i<n;i++){
+        printf("%d ",A[i].score);
+    }
+    for(int i=0;i<n;i++){
+        A[i].rank=Ranking(H,A[i].score);
+    }
+    return 0;
+}
+#오류 : if(H->data<=n->data){ // 제일 높은 점수가 들어왔을 때 H->data를 찾지함
