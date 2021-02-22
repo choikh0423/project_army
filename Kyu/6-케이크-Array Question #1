@@ -20,6 +20,9 @@ def answer(meetings):
         elif answer[-1][1] >= time[0] and answer[-1][1] < time[1]:
             merge = (answer[-1][0], time[1])
             answer[-1] = merge
+            
+        # All the other cases are assumed to keep the original time value, so were disregarded in conditions
+        (ex. when the new time is completely overlapped by the previous time)
 
     return answer
   
