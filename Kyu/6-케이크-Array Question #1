@@ -1,1 +1,28 @@
-# 싸지방 인터넷이 안되서 교과서 공부로 대체하였음. 곧 업로드 해놓을 예정.
+  
+# 시작시간: ---
+# 종료시간: ---
+# 날짜: 21.02.20 - 21.02.22
+
+# 1차 시도 - O(nlogn + 2n) ~ O(nlogn)
+def answer(meetings):
+    # Sort by meeting start time - necessary for simplifying further comparison
+    sort_start = sorted(meetings, key=lambda x: x[0])
+    answer = []
+    answer.append(sort_start[0])
+    
+    # Comparison to create condensed meeting time
+    for time in sort_start[1:]:
+        # When the time does not overlap with previous time
+        if answer[-1][1] < time[0]:
+            answer.append(time)
+        
+        # When the time overlaps with previous time (includes overlap, touching)
+        elif answer[-1][1] >= time[0] and answer[-1][1] < time[1]:
+            merge = (answer[-1][0], time[1])
+            answer[-1] = merge
+
+    return answer
+  
+# O(nlogn) coming from function 'sorted'
+# O(n) coming from array slicing
+# O(n) coming from for loop
