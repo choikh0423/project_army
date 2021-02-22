@@ -5,7 +5,7 @@
 
 # 1차 시도 - O(nlogn + 2n) ~ O(nlogn)
 def answer(meetings):
-    # Sort by meeting start time - necessary for simplifying further comparison
+    # Sort by meeting start time - necessary for simplifying further comparison (일일이 다 비교하지 않아도 되게 해줌)
     sort_start = sorted(meetings, key=lambda x: x[0])
     answer = []
     answer.append(sort_start[0])
@@ -16,13 +16,14 @@ def answer(meetings):
         if answer[-1][1] < time[0]:
             answer.append(time)
         
-        # When the time overlaps with previous time (includes overlap, touching)
+        # When the time overlaps with previous time (includes overlap, touching) (겹치거나 서로 건드릴때)
         elif answer[-1][1] >= time[0] and answer[-1][1] < time[1]:
             merge = (answer[-1][0], time[1])
             answer[-1] = merge
             
         # All the other cases are assumed to keep the original time value, so were disregarded in conditions
         (ex. when the new time is completely overlapped by the previous time)
+        (다른 케이스들은 이전 시간을 그대로 가져가기에 컨디션에 포함해주지 안하도됌, ex. 다음 시간이 이전 시간에 완전히 포함될때)
 
     return answer
   
