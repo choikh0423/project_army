@@ -30,20 +30,7 @@
 #start time : 2021.02.19 6:13
 #end time : 2021.02.19 6:20
 
-#시도1()
-//구조체에 대한 이해가 아직 부족해서 교재로 더 공부하고 오겠다.
-
-#2021.02.20
-// 점수와 등수 포함한 !구조체 student배열!을 만들고 그안에 input값을 넣는다.
-// 점수 등수를 포함하고 성적순으로 배치된 !단순 연결리스트(Ranking)!를 만든다.
-// 함수에 자신의 점수를 넣으면 Ranking 리스트에서 자신의 위치가 어디인지 파악하고 배열에 넣으며 Ranking에 등록한다. 
-
-#2021.02.21
-#start time : 2021.02.21 22:20
-#end time : 2021.02.19 22:43
-#43min
-
-#시도1
+#내코드
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -62,37 +49,46 @@ typedef struct rank_h{
     rank_node *H;
 }rank_h;
 
-int Ranking(rank_h *H,int score){
+int Ranking(rank_h *Head,int score){
     rank_node *n=(rank_node *)malloc(sizeof(rank_node));
     n->data=score;
     rank_node *p;
-    p=H;
+    p=Head->H;
     if(p==NULL){ // 랭킹에 아무도 없을때
-        H=n;
+        printf("들어옴");
+        printf("\n%d\n",n);
+        Head->H=n;
         n->rank=1;
         n->link=NULL;
         return n->rank; // 인풋 score의 등수를 반환해줌
     }
-    if(H->data<=n->data){ // 제일 높은 점수가 들어왔을 때
-        H=n;
+    if(Head->H->data<=n->data){ // 제일 높은 점수가 들어왔을 때
+        printf("제일 높은 점수가 들어왔을 때\n");
+        Head->H=n;
         n->link=NULL;
         n->rank=1;
+        p=Head->H; //
     }
     else{
-        while(p->link->data>n->data){ // 포인터를 점수가 들어가야할 위치를 찾는 과정 (동점일 경우 제일 최신에 들어온 것이 젤앞에온다.)
+        while(p->link!=NULL&&p->link->data>=score){ // 포인터를 점수가 들어가야할 위치를 찾는 과정 (동점일 경우 제일 최신에 들어온 것이 젤앞에온다.)
+            printf("위치찾는중..\n");
             p=p->link;
         }
+        printf("이건됨");
         n->rank=p->rank+1;
         n->link=p->link;
         p->link=n;
     }
     while(n->data == p->data){ // 동점이 있으면 동점 끝에 노드부터 rank를 1씩 올리기위한 포인터 움직임.
+        printf("동점발견!\n");
         p=p->link;
     }
     while(p->link!=NULL){//마지막 전 노드까지 rank를 1씩 증가시켜줌 
+        printf("%d일때 점수=%d의rank=%d rank1증가 하는중..\n",n->data,p->data,p->rank);
         p->rank=p->rank+1;
+        p->link=p->link->link;
     }
-    p->rank=p->rank+1; //마지막 노드 rank를 1 증가시켜줌
+    if(n->link!=NULL)p->rank=p->rank+1; //마지막 노드 rank를 1 증가시켜줌
     return n->rank; // 인풋 score의 등수를 반환해줌
 }
 
@@ -111,8 +107,30 @@ int main() {
     for(int i=0;i<n;i++){
         A[i].rank=Ranking(H,A[i].score);
     }
+    printf("\n");
+    for(int i=0;i<n;i++){
+        printf("%d %d\n",A[i].score,A[i].rank);
+    }
     return 0;
 }
+
+#시도1()
+//구조체에 대한 이해가 아직 부족해서 교재로 더 공부하고 오겠다.
+
+#2021.02.20
+// 점수와 등수 포함한 !구조체 student배열!을 만들고 그안에 input값을 넣는다.
+// 점수 등수를 포함하고 성적순으로 배치된 !단순 연결리스트(Ranking)!를 만든다.
+// 함수에 자신의 점수를 넣으면 Ranking 리스트에서 자신의 위치가 어디인지 파악하고 배열에 넣으며 Ranking에 등록한다. 
+
+#2021.02.21
+#start time : 2021.02.21 22:20
+#end time : 2021.02.19 22:43
+#43min
+
+
+
+#시도1
+
 #오류 : if(H->data<=n->data){ // 제일 높은 점수가 들어왔을 때 
 //H->data를 찾지함
 
@@ -138,3 +156,40 @@ int main() {
 //세번째 while문이 계속 돌고있음을 확인.// p->link!=NULL이라는 조건문인데 마지막노드가 NULL이라는 주소를 갖지않는 것같다. 위에 코드에서 문제점을 찾아야한다.
 //그게아니라 세번째 while문안에 p->link=p->link->link라는 포인터를 옮겨주는 실행문을 안넣어줬었다.
 
+#시도4(시도3의 오류를 고친후)
+input
+10
+60 34 55 100 90 76 60 90 80 87
+output
+60 34 55 100 90 76 60 90 80 87 
+60 1
+34 2
+55 3
+100 1
+90 2
+76 3
+60 4
+90 5
+80 6
+87 7
+#실패
+//등수가 자기 멋대로다..100점이 1등인걸보니 젤높은점수가 들어왔을 때 실행문은 제대로 되는 것같다.
+//왜인지 들어온 순서대로 순위가 매겨지다가 100점이 들어간이후로 다시 1위부터 들어온순서대로 랭킹이 매겨지고있다.
+//while(p->link!=NULL&&(p->link->data) > (n->data))p=p->link;이 안되고있다.
+//if(Head->H->data<=n->data){ // 제일 높은 점수가 들어왔을 때
+        Head->H=n;
+        n->link=NULL;
+        n->rank=1;
+    }
+    //여기서 Head->H가 바꼈는데 p는 바뀌기전에 포인터를 가지고있음. 따라서 제일 높은 점수가 들어왔을 때
+    //p를 다시 Head->H 로 초기화해야된다고 생각함.
+    
+  #시도5(시도4의 실패이유를 고친후)
+  //while(n->data == p->data){ // 동점이 있으면 동점 끝에 노드부터 rank를 1씩 올리기위한 포인터 움직임.
+        printf("동점발견!\n");
+        p=p->link;
+    }
+  //에서 유효하지않는 주소참조 오류가뜬다.
+  //생각해보니까 마지막에 student구조체를 출력할때도 오류가 있다. 이미 넣은애들도 계속바꿔줘야한다.
+  //처음 알고리즘을 잘못짠거같다. 다시 짜오겠다.
+   
