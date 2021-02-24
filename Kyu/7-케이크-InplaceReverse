@@ -1,1 +1,46 @@
-# 사지방 인터넷 안되서 공책에 풀어놓았습니다. 지금까지 배운거 복습도 한번 쭉 했습니다.
+# 시작시간: ---
+# 종료시간: ---
+# 날짜: 21.02.23
+
+# 1차 시도 - O(n)
+def reverse(list_of_chars):
+    # Reverse the input list of chars in place
+    for i in range(len(list_of_chars)//2):
+        swapping(list_of_chars, i)
+    pass
+
+def swapping(list_of_chars, i):
+    temp = list_of_chars[i]
+    list_of_chars[i] = list_of_chars[len(list_of_chars)-1-i]
+    list_of_chars[len(list_of_chars)-1-i] = temp
+    
+# 파이썬은 Bottom-to-Top 형식이라서 아래에 함수를 적어주어야함
+# Space = O(n) 왜냐하면 temp가 i의 개수에 따라서 계속 생기기 때문
+
+# 2차시도 - O(n) (답안 참고)
+def reverse(list_of_chars):
+
+    # Reverse the input list of chars in place
+    
+    left_index = 0
+    right_index = len(list_of_chars) - 1 - left_index
+    
+    while left_index < right_index:
+        list_of_chars[left_index], list_of_chars[right_index] = \
+        list_of_chars[right_index], list_of_chars[left_index]
+        
+        left_index += 1
+        right_index -= 1
+
+# 파이썬은 너무 긴 라인 끊어줄때 \ 사용함
+
+# 3차시도 - O(n) (답안과 내 답 병합)
+def reverse(list_of_chars):
+    # Reverse the input list of chars in place
+    for i in range(len(list_of_chars)//2):
+        swapping(list_of_chars, i)
+    pass
+
+def swapping(list_of_chars, i):
+    list_of_chars[i], list_of_chars[len(list_of_chars)-1-i] = \
+    list_of_chars[len(list_of_chars)-1-i], list_of_chars[i]
