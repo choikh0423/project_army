@@ -43,8 +43,11 @@ def reverse(message, start, end):
         message[start], message[end] = message[end], message[start]
         start += 1
         end -= 1
+        
+        
 # Reverse 함수 자체를 바꿔야했음. 기존의 Array Question #2에서 쓴 reverse 함수는 무조건 전체 문자열을 넣는것을 요구했음.
   하지만 이번 reverse 함수는 start, end input을 받아서 어디서부터 어디까지만 reverse하면 되는지 명시 가능
 # 첫번째 reverse: O(n)
   for loop 안의 reverse: ~(O(n^2))
   Therefore, O(n^2)
+# 신기하게도 교과서 답이랑 흡사함.
