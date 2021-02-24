@@ -34,84 +34,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//11:55
+//12:06
 typedef struct student{
     int score;
     int rank;
 }student;
 
-typedef struct rank_node{
-    int data;
-    int rank;
-    struct rank_node *link;
-}rank_node;
-
-typedef struct rank_h{
-    rank_node *H;
-}rank_h;
-
-int Ranking(rank_h *Head,int score){
-    rank_node *n=(rank_node *)malloc(sizeof(rank_node));
-    n->data=score;
-    rank_node *p;
-    p=Head->H;
-    if(p==NULL){ // 랭킹에 아무도 없을때
-        printf("들어옴");
-        printf("\n%d\n",n);
-        Head->H=n;
-        n->rank=1;
-        n->link=NULL;
-        return n->rank; // 인풋 score의 등수를 반환해줌
-    }
-    if(Head->H->data<=n->data){ // 제일 높은 점수가 들어왔을 때
-        printf("제일 높은 점수가 들어왔을 때\n");
-        Head->H=n;
-        n->link=NULL;
-        n->rank=1;
-        p=Head->H; //
-    }
-    else{
-        while(p->link!=NULL&&p->link->data>=score){ // 포인터를 점수가 들어가야할 위치를 찾는 과정 (동점일 경우 제일 최신에 들어온 것이 젤앞에온다.)
-            printf("위치찾는중..\n");
-            p=p->link;
-        }
-        printf("이건됨");
-        n->rank=p->rank+1;
-        n->link=p->link;
-        p->link=n;
-    }
-    while(n->data == p->data){ // 동점이 있으면 동점 끝에 노드부터 rank를 1씩 올리기위한 포인터 움직임.
-        printf("동점발견!\n");
-        p=p->link;
-    }
-    while(p->link!=NULL){//마지막 전 노드까지 rank를 1씩 증가시켜줌 
-        printf("%d일때 점수=%d의rank=%d rank1증가 하는중..\n",n->data,p->data,p->rank);
-        p->rank=p->rank+1;
-        p->link=p->link->link;
-    }
-    if(n->link!=NULL)p->rank=p->rank+1; //마지막 노드 rank를 1 증가시켜줌
-    return n->rank; // 인풋 score의 등수를 반환해줌
-}
-
 int main() {
     int n;
+    int cnt=1;
     scanf("%d",&n);
-    student* A=(student*)malloc(sizeof(student) * n);
-    rank_h *H=(rank_h*)malloc(sizeof(rank_h));
-    
+    student *A=(student *)malloc(sizeof(student)*n);
     for(int i=0;i<n;i++){
         scanf("%d ",&A[i].score);
     }
-     for(int i=0;i<n;i++){
-        printf("%d ",A[i].score);
-    }
     for(int i=0;i<n;i++){
-        A[i].rank=Ranking(H,A[i].score);
+        for(int j=0;j<i;j++){
+            if(A[i].score<A[j].score){
+                cnt++;
+            }
+            else if(A[i].score>A[j].score){
+                A[j].rank+=1;
+            }
+        }
+        A[i].rank=cnt;
+        cnt=1;
     }
-    printf("\n");
     for(int i=0;i<n;i++){
         printf("%d %d\n",A[i].score,A[i].rank);
     }
-    return 0;
 }
 
 #시도1()
@@ -193,3 +145,9 @@ output
   //생각해보니까 마지막에 student구조체를 출력할때도 오류가 있다. 이미 넣은애들도 계속바꿔줘야한다.
   //처음 알고리즘을 잘못짠거같다. 다시 짜오겠다.
    
+#2021.02.24
+#11:52 ~ 12:06
+
+#시도6(성공)
+//시간복잡도 O(logN^2)안나오게 해보려했지만 도무지 방법이 떠오르지않아서 그냥해버렸다
+//앞에서부터 차근차근 자기보다 큰게 몇게있는지 조사후 본인의 rank에 넣고 작은애들은 rank 1씩 더해주는 방식으로 했다.
