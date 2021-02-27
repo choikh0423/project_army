@@ -45,6 +45,7 @@ I 700 북한산
 #내 코드
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct node{
     int num;
@@ -53,42 +54,96 @@ typedef struct node{
 }node;
 
 typedef struct Table{
-    node *H=(node*)malloc(sizeof(node));
+    node *Head;
 }Table;
 
-Table *A=(Table*)malloc(sizeof(Table));
+Table* Creat_Table(){
+    Table *A=(Table *)malloc(sizeof(Table));
+    A->Head=NULL;
+    return A;
+}
 
-void Inset(int number, char name[]){
+
+void Insert(Table *A, int number, char Name[]){
     //이미 Table에 number가 있다면 바로 함수에서 나간다.
+    node *a=(node *)malloc(sizeof(node));
+    a->num=number;
+    strcpy(a->name,Name);
+   if(A->Head==NULL){
+       A->Head=a;
+       a->link=NULL;
+       return;
+   }
+   if(A->Head->num > a->num){
+       a->link=A->Head;
+       A->Head=a;
+       return;
+   }
+   node *p=A->Head;
+   while((p->link->num) < (a->num) ){
+       p=p->link;
+   }
+   if(p->link==NULL){
+       a->link=NULL;
+       p->link=a;
+   }
+   else{
+       a->link=p->link;
+       p->link=a;
+   }
 }
 
-void Delete(int number){
+/*void Delete(int number){
     // Table에 number가 없다면 바로 함수에서 나간다.
-}
+}*/
 
-void Print_node(int m[]){
+
+void Print_node(Table *A){
     //Table에서 m배열에 저장되어 있는 순번만 출력
+    if(A->Head==NULL){
+        printf("아무것도 없습니다.\n");
+    }
+    else{
+        node *p=A->Head;
+        while(p!=NULL){
+            printf("%d %s\n",p->num,p->name);
+            p=p->link;
+        }
+        
+    }
     
 }
 int main() {
+    Table *A;
+    A=Creat_Table();
     int n,m[5];
     char c;
     int number;
     char name[10];
     scanf("%d",&n);
     for(int i=0;i<n;i++){
-        scanf("%c %d %s",&c,&number,name);
-        if(c=='I')Insert(number,name);
-        else if(c=='D')Delete();
-        else {
-            printf("잘못 입력하셨습니다.\n")
-            i-=1;
-        }
+        scanf(" %c %d %s",&c,&number,name);
+        printf("입력%c %d %s\n",c,number,name);
+        if(c=='I')Insert(A,number,name);
     }
-    for(int i=0;i<5;i++)
-        scanf("%d",m);
-    Print_node(m)
+    Print_node(A);
+    return 0;
 }
+/*
+10
+I 1011 한라산
+I 991 백두산
+I 992 오대산
+I 993 백두산
+I 800 백두산
+D 500 한라산
+I 908 남산
+I 950 금강산
+I 1205 지리산
+I 700 북한산
+1 2 3 4 5
+*/
+
 
 #2021.02.25
 #시도1
@@ -109,3 +164,8 @@ int main() {
 //scanf를 쓸때 엔터까지 버퍼에 남아 있다는 것을 생각해야된다. 그래서 젤처음에 scanf("%d",&n)를 할때 10을입력하고 엔터 눌렸을 때
 //버퍼에 계속해서 엔터가 남아있고 바로다음 scanf("%c %d %s",&c,&number,name)를 할때 %c에 그 엔터가 입력되서 이상하게 계속 입력되고있었다
 //그래서 고치는 방향으로 scanf("%c %d %s",&c,&number,name) => scanf(" %c %d %s",&c,&number,name) 앞에 스페이스바 하나 넣는 것으로 해소할 수 있었다.
+
+#시도3(오류)
+//일단 insert()부터 잘되는지 확인하기 위해 나머지는 다 지웠다.
+//어딘가에서 무한루프 도는 중.
+//젤큰수가 들어왔을 때 SIGSEGV 오류가 뜬다 (유효하지않은 주소에 접근하려할때 나는 것.)
