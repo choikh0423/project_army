@@ -98,7 +98,7 @@ void Delete(Table *A,int number){
     // Table에 number가 없다면 바로 함수에서 나간다.
     node *p,*del_p; //없애는 노트를 메모리에서 완전삭제하기위해 포인터 2개.
     p=A->Head;
-    if(number==A->Head->num){
+    if(number==A->Head->num){ //젤앞에 찾는 number가 있을경우.
         del_p=A->Head;
         A->Head=A->Head->link;
         free(del_p);
@@ -107,7 +107,7 @@ void Delete(Table *A,int number){
         while(p->link!=NULL && p->link->num!=number){
             p=p->link;
         }
-        if(p->link==NULL)return;
+        if(p->link==NULL)return; //찾는 number가 없다.
         else{
             del_p=p->link;
             p->link=p->link->link;
@@ -116,6 +116,22 @@ void Delete(Table *A,int number){
     }
 }
 
+void Wanted_node(Table *A,int n[]){
+    int k=0;
+    if(A->Head==NULL){
+        printf("아무것도 없습니다.\n");
+    }
+    else{
+        node *p=A->Head;
+        for(int i=1;p!=NULL;i++){
+           if(i==n[k]){//i번째 포인터가 가르킨게 n[k]랑 같다면 출력 (단, k=0부터 시작하고 한번 출력하면 k=k+1)
+               printf("%d %s\n",p->num,p->name);
+               k++;
+           }
+           p=p->link;
+        }
+    }
+}
 
 void Print_node(Table *A){
     //Table에서 m배열에 저장되어 있는 순번만 출력
@@ -142,11 +158,15 @@ int main() {
     scanf("%d",&n);
     for(int i=0;i<n;i++){
         scanf(" %c %d %s",&c,&number,name);
-        printf("입력%c %d %s\n",c,number,name);
+       // printf("입력%c %d %s\n",c,number,name);
         if(c=='I')Insert(A,number,name);
         else if(c=='D')Delete(A,number);
     }
-    Print_node(A);
+    for(int i=0;i<5;i++){
+        scanf(" %d",&m[i]);
+    }
+    //Print_node(A);
+    Wanted_node(A,m);
     return 0;
 }
 
@@ -184,3 +204,6 @@ int main() {
 
 #시도5
 //Delete()까지 완성.
+
+#시도6(모두 완성)
+//
