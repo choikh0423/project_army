@@ -69,33 +69,52 @@ void Insert(Table *A, int number, char Name[]){
     node *a=(node *)malloc(sizeof(node));
     a->num=number;
     strcpy(a->name,Name);
-   if(A->Head==NULL){
+   if(A->Head==NULL){ //아무것도없을 때
        A->Head=a;
        a->link=NULL;
        return;
    }
-   if(A->Head->num > a->num){
+   if(A->Head->num > a->num){ //젤 앞에 노드 보다 작으 수가 들어왔을 때
        a->link=A->Head;
        A->Head=a;
        return;
    }
    node *p=A->Head;
-   while((p->link->num) < (a->num) ){
+   while(p->link!=NULL && (p->link->num) < (a->num) ){ //자기보다 큰것과 작은 것 그 사이에 넣기위해 포인터의자리를 찾는 과정
        p=p->link;
    }
-   if(p->link==NULL){
+   if(p->link==NULL){ // NULL까지 와버렸으면 젤 큰수가 입력된 것으로 간주하고 젤 끝에 삽입
        a->link=NULL;
        p->link=a;
    }
    else{
+       if(p->link->num==a->num || p->num==a->num)return; //같은수가 있을 경우 아무것도 안하고 나감.
        a->link=p->link;
        p->link=a;
    }
 }
 
-/*void Delete(int number){
+void Delete(Table *A,int number){
     // Table에 number가 없다면 바로 함수에서 나간다.
-}*/
+    node *p,*del_p; //없애는 노트를 메모리에서 완전삭제하기위해 포인터 2개.
+    p=A->Head;
+    if(number==A->Head->num){
+        del_p=A->Head;
+        A->Head=A->Head->link;
+        free(del_p);
+    }
+    else{
+        while(p->link!=NULL && p->link->num!=number){
+            p=p->link;
+        }
+        if(p->link==NULL)return;
+        else{
+            del_p=p->link;
+            p->link=p->link->link;
+            free(del_p);
+        }
+    }
+}
 
 
 void Print_node(Table *A){
@@ -125,24 +144,11 @@ int main() {
         scanf(" %c %d %s",&c,&number,name);
         printf("입력%c %d %s\n",c,number,name);
         if(c=='I')Insert(A,number,name);
+        else if(c=='D')Delete(A,number);
     }
     Print_node(A);
     return 0;
 }
-/*
-10
-I 1011 한라산
-I 991 백두산
-I 992 오대산
-I 993 백두산
-I 800 백두산
-D 500 한라산
-I 908 남산
-I 950 금강산
-I 1205 지리산
-I 700 북한산
-1 2 3 4 5
-*/
 
 
 #2021.02.25
@@ -175,3 +181,6 @@ I 700 북한산
 //여기까지 올림차순으로 정렬되면서 자기위치를 잘찾아가는 것까지 확인했다.
 //Insert()함수에서 겹치는거 들어오면 입력안되게하는 것까지 완료했다
 //이제 남은 것은 Delete() 다음 원하는 것 5개 출력만하면된다.
+
+#시도5
+//Delete()까지 완성.
