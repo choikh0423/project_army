@@ -19,7 +19,7 @@ def merge_lists(my_list, alices_list):
     
     # Merging
     while count < len(my_list) + len(alices_list):
-        # End Cases
+        # Edge Cases
         # If my_list or alices_list is empty or fully used
         if len(my_list) == 0 or my_count == len(my_list):
             merged_list.append(alices_list[alice_count])
@@ -40,6 +40,9 @@ def merge_lists(my_list, alices_list):
 
 
     return merged_list
-    
-# 2차 시도 - 
+
+## Merge Sorting 알고리즘을 쓰려다가 recursion(재귀함수)을 사용하지 않아도 될 것 같아서 while loop 씌우고 해보았음.
+    ㄴ 안쓰는게 당연하구나. merging만 하면되는데 굳이 merge sort를 할 필요가 없지. 이미 sorting이 되어있는데. 기계적으로 생각하지말자.
+
+# 2차 시도 - 더 간결한 답 커밍쑨
 
