@@ -45,6 +45,72 @@ hellocarbot
 #end time : 
 
 #내코드
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node{
+    int address;
+    char data[100];
+    int number;
+}Node;
+
+typedef struct HashTable{
+    Node *node;
+    int hashsize;
+}HashTable;
+
+HashTable* creat_hashtable(int size){
+    HashTable *table=(HashTable*)malloc(sizeof(HashTable));
+    table->node=(Node*)malloc(sizeof(Node)*size);
+    table->hashsize=size;
+    return table;
+}
+
+int convert_s(char a[]){
+    int sum=0;
+    for(int i=0;a[i]!=0;i++){
+        sum=sum+(int)a[i];
+    }
+    return sum;
+}
+
+int Hashfuntion(char a[],int size){
+    int key;
+    key=convert_s(a);
+    key=key%size;
+    return key;
+}
+
+void InsertHash(HashTable *H,char a[],int num,int size){
+    Node *p;
+    int k;
+    Node *n=(Node*)malloc(sizeof(Node));
+    k=Hashfuntion(a,size);
+    strcpy(n->data,a);
+    n->number=num;
+    n->address=k;
+    H->node[k]=n;
+}
+
+int main() {
+    int n,m;
+    char name[100];
+    int num;
+    scanf("%d %d",&n,&m);
+    HashTable *H=creat_hashtable(101);
+    for(int i=0;i<n;i++){
+        scanf(" %s %d",name,&num);
+        printf("%d\n",convert_s(name));
+        
+    }
+    
+}
 
 #2021.02.28
 //이문제랑 제일 잘맞는 자료구조는 해시라고생각한다. 그래서 오늘부터 해시공부하고 풀도록하겠다.
+
+#2021.03.01
+//H->node[k]=n;
+//error: incompatible types when assigning to type ‘Node’ from type ‘Node *
+//위코드에서 이러한 에러가뜬다 분명 node는 Node를 가르키는 포인터Node*이고 n도 Node*타입인데도 불구하고 호환되지않는다고 하고 node[k]가 포인터형이 아니라고한다..
