@@ -114,3 +114,6 @@ int main() {
 //H->node[k]=n;
 //error: incompatible types when assigning to type ‘Node’ from type ‘Node *
 //위코드에서 이러한 에러가뜬다 분명 node는 Node를 가르키는 포인터Node*이고 n도 Node*타입인데도 불구하고 호환되지않는다고 하고 node[k]가 포인터형이 아니라고한다..
+
+#2021.03.02
+//오늘 너무피곤해서 그래도 조금은 와서 다른사람들은 어떻게 구현했는지 봤지만 아직 문제원인을 모르겠다.
