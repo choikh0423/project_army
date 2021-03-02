@@ -44,5 +44,31 @@ def merge_lists(my_list, alices_list):
 ## Merge Sorting 알고리즘을 쓰려다가 recursion(재귀함수)을 사용하지 않아도 될 것 같아서 while loop 씌우고 해보았음.
     ㄴ 안쓰는게 당연하구나. merging만 하면되는데 굳이 merge sort를 할 필요가 없지. 이미 sorting이 되어있는데. 기계적으로 생각하지말자.
 
-# 2차 시도 - 더 간결한 답 커밍쑨
+# 2차 시도 - DRY Version
+def merge_lists(my_list, alices_list):
+
+    # Combine the sorted lists into one large sorted list
+    
+    # Initialization
+    merged_list = []
+    count = 0
+    my_count = 0
+    alice_count = 0
+    
+    # Merging
+    while count < len(my_list) + len(alices_list):
+        # If my_list or alices_list is empty or fully used
+        is_my_list_exhausted = my_count == len(my_list)
+        is_alice_list_exhausted = alice_count == len(alices_list)
+        if not is_alice_list_exhausted and (is_my_list_exhausted or my_list[my_count] >= alices_list[alice_count]):
+            merged_list.append(alices_list[alice_count])
+            alice_count += 1
+        else:
+            merged_list.append(my_list[my_count])
+            my_count += 1
+        
+        count += 1
+
+
+    return merged_list
 
