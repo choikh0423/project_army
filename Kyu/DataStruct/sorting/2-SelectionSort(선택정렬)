@@ -1,3 +1,6 @@
+# 한줄 정리: 
+# Concept Summary: 
+
 def SelectionSort(lst):
   for i in range(len(lst)):
     k = i
@@ -8,3 +11,7 @@ def SelectionSort(lst):
     temp = lst[k]
     lst[k] = lst[i]
     lst[i] = temp
+
+# Time Complexity:
+# Space Complexity:
+# Stable? 
