@@ -1,0 +1,10 @@
+def SelectionSort(lst):
+  for i in range(len(lst)):
+    k = i
+    while (k>0 and lst[k]<lst[k-1]):
+      k -= 1
+    
+    # Swap
+    temp = lst[k]
+    lst[k] = lst[i]
+    lst[i] = temp
