@@ -1,6 +1,7 @@
-# This file is for testing the sorting algorithms
+# This is a test file for the sorting algorithms
 
 from insertionSort import InsertionSort
+from selectionSort import SelectionSort
 import unittest
 
 # Runs all the sorting algorithms
@@ -12,6 +13,12 @@ InsertionSort(test1)
 InsertionSort(test2)
 InsertionSort(test3)
 
-print(test1)
-print(test2)
-print(test3)
+print("insertion test1", test1)
+print("insertion test2", test2)
+print("insertion test3", test3)
+
+SelectionSort(test1)
+
+print("selection test1", test1)
+print("selection test2", test2)
+print("selection test3", test3)
