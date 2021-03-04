@@ -1,1 +1,8 @@
-
+def InsertionSort(lst):
+  for i in range(len(lst)):
+    k = i
+    while(k>0 and lst[k]<lst[k-1]):
+      temp = lst[k-1]
+      lst[k-1] = lst[k]
+      lst[k] = temp
+      k -= 1
