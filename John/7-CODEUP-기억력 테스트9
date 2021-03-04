@@ -93,7 +93,7 @@ void InsertHash(char a[],int num,int size){
     p=hashTable[hashIndex].head;
     if(p==NULL){
         hashTable[hashIndex].head=newNode;
-        printf("hashIndex=%d들어옴\n",hashIndex);
+        //printf("hashIndex=%d들어옴\n",hashIndex);
         return;
     }
     else{
@@ -126,22 +126,42 @@ void display(){
     }
     return;
 }
+
+void Int_print(char a[]){
+    Node* horse;
+    int i=0;
+    for(i=0;i<size;i++){
+        horse=hashTable[i].head;
+        while(horse!=NULL){
+            if(strcmp(horse->data,a)==0){
+                printf("%d\n",horse->number);
+                return;
+            }
+            horse=horse->next;
+        }
+    }
+    printf("0\n");
+    return;
+}
 int main() {
     int n,m;
     char name[100];
     int num;
     hashTable=(HashTable*)malloc(sizeof(HashTable)*size);
     scanf("%d %d",&n,&m);
-    display();
-    printf("\n*--------------------------------------*\n");
+    //display();
+    //printf("\n*--------------------------------------*\n");
     for(int i=0;i<n;i++){
         scanf(" %s %d",name,&num);
         InsertHash(name,num,size);
     }
-    display();
+    //display();
+    for(int i=0;i<m;i++){
+        scanf("%s",name);
+        Int_print(name);
+    }
     
 }
-
 #2021.02.28
 //이문제랑 제일 잘맞는 자료구조는 해시라고생각한다. 그래서 오늘부터 해시공부하고 풀도록하겠다.
 
@@ -155,4 +175,7 @@ int main() {
 
 #2021.03.04
 //일단 입력하는 것까지 구현했고 오늘따라 바빠서 내일 진짜로 완성하겠다.
-//확실히 기본적인 해싱공부후에 구현하니까 
+//확실히 기본적인 해싱공부후에 구현하니까 편해졌다
+
+#시도1
+//Segmentation fault 오류떴다 내일 수정해보겠다.
