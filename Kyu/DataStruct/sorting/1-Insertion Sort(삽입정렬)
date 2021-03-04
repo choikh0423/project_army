@@ -1,3 +1,6 @@
+# 한줄 정리: 
+# Concept Summary: 
+
 def InsertionSort(lst):
   for i in range(len(lst)):
     k = i
