@@ -44,27 +44,30 @@ hellocarbot
 #start_time : 2021.02.28
 #end time : 
 
-#내코드
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 typedef struct Node{
-    int address;
     char data[100];
     int number;
+    struct Node* next;
 }Node;
 
 typedef struct HashTable{
-    Node *node;
-    int hashsize;
+    Node *head;
+    int count;
 }HashTable;
 
-HashTable* creat_hashtable(int size){
-    HashTable *table=(HashTable*)malloc(sizeof(HashTable));
-    table->node=(Node*)malloc(sizeof(Node)*size);
-    table->hashsize=size;
-    return table;
+int size=103;
+HashTable* hashTable=NULL;
+
+Node* Creat_node(char data[],int number){
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    strcpy(newNode->data,data);
+    newNode->number=number;
+    newNode->next=NULL;
+    return newNode;
 }
 
 int convert_s(char a[]){
@@ -82,28 +85,60 @@ int Hashfuntion(char a[],int size){
     return key;
 }
 
-void InsertHash(HashTable *H,char a[],int num,int size){
+void InsertHash(char a[],int num,int size){
     Node *p;
-    int k;
-    Node *n=(Node*)malloc(sizeof(Node));
-    k=Hashfuntion(a,size);
-    strcpy(n->data,a);
-    n->number=num;
-    n->address=k;
-    H->node[k]=n;
+    int hashIndex;
+    Node *newNode=Creat_node(a,num);
+    hashIndex=Hashfuntion(a,size);
+    p=hashTable[hashIndex].head;
+    if(p==NULL){
+        hashTable[hashIndex].head=newNode;
+        printf("hashIndex=%d들어옴\n",hashIndex);
+        return;
+    }
+    else{
+        while(p!=NULL && strcmp(p->data,a)!=0){
+            p=p->next;
+        }
+        if( strcmp(p->data,a)==0){
+            p->number=p->number+num;
+            return;
+        }
+        else{
+            newNode->next=p;
+            p->next=newNode;
+        return;
+        }
+    }
 }
 
+void display(){
+    Node* horse;
+    int i=0;
+    for(i=0;i<size;i++){
+        horse=hashTable[i].head;
+        printf("버켓[%d] :",i);
+        while(horse!=NULL){
+            printf("key:%d data :%s val:%d -> ",i,horse->data,horse->number);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
 int main() {
     int n,m;
     char name[100];
     int num;
+    hashTable=(HashTable*)malloc(sizeof(HashTable)*size);
     scanf("%d %d",&n,&m);
-    HashTable *H=creat_hashtable(101);
+    display();
+    printf("\n*--------------------------------------*\n");
     for(int i=0;i<n;i++){
         scanf(" %s %d",name,&num);
-        printf("%d\n",convert_s(name));
-        
+        InsertHash(name,num,size);
     }
+    display();
     
 }
 
@@ -117,3 +152,7 @@ int main() {
 
 #2021.03.02
 //오늘 너무피곤해서 그래도 조금은 와서 다른사람들은 어떻게 구현했는지 봤지만 아직 문제원인을 모르겠다.
+
+#2021.03.04
+//일단 입력하는 것까지 구현했고 오늘따라 바빠서 내일 진짜로 완성하겠다.
+//확실히 기본적인 해싱공부후에 구현하니까 
