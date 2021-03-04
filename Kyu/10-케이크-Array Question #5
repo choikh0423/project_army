@@ -1,1 +1,51 @@
-공책에는 다 풀어놨습니다만.... 싸지방 자체를 오늘 안열어줬습니다 ㅠㅠㅠ 내일 다 업로드 하겠습니다
+# 시작시간: ---
+# 종료시간: ---
+# 날짜: 21.03.03
+
+
+# 1차 시도 - O(n)
+def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders):
+    
+    # Initialization
+    dine_in_count = 0
+    take_out_count = 0
+    
+    # Loop over served_orders
+    for i in served_orders:
+        dine_in_empty_or_full = len(dine_in_orders) <= dine_in_count
+        take_out_empty_or_full = len(take_out_orders) <= take_out_count
+        
+        if not dine_in_empty_or_full and dine_in_orders[dine_in_count] == i:
+            dine_in_count += 1
+        elif not take_out_empty_or_full and take_out_orders[take_out_count] == i:
+            take_out_count += 1
+    
+    
+    return len(served_orders) == len(take_out_orders) + len(dine_in_orders) \
+            and dine_in_count == len(dine_in_orders) \
+            and take_out_count == len(take_out_orders)
+            
+# Edge Case 하나 까먹음: Served_Orders에 Extra Order가 들어있을때
+ -> 그래서 마지막 return 값에 len(served_orders) == len(take_out_orders) 파트 넣음
+# 새로 만든 Framework:
+ 1) 문제 읽고 생각해보기
+  1-1. 인풋
+  1-2. 아웃풋
+  1-3. 제약
+ 2) 가장 간단한 답 생각해보기
+  2-1. Brute Force(무차별 대입) 방법도 괜찮음. 효율적이고 좋은 알고리즘을 향해 나아가야 함
+  2-2. 올바른 자료구조 정하기 -> 가장 효율적으로 문제를 해결할 수 있어야함
+  2-3. Pseudocode(의사코드) 쓰기
+ 3) 생각해낸 답의 허점들 생각하기
+  3-1. 더 나은 자료구조
+  3-2. 알고리즘 효율성
+  3-3. DRY
+  3-4. Edge Cases(엣지 케이스)
+
+# 2차 시도(답안지 참고) - O(n)
+오늘 근무때 생각해보고 다시 돌아와서 답을 적고 답안지 확인할 예정.
+
+
+# 안그래도 내 첫번째 답이 추상적이라고 생각했음. 만일 list를 비교해서 그 순서를 알아내는 것이 문제의 본질이라면 1차 시도에서 사용한 count만 비교하는 수법은 추상적임. 재귀함수를 활용하여
+  list들을 직접 비교해주는게 더 '안전한' 답이라고 생각함.
+  
