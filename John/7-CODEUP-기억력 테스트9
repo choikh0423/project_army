@@ -42,7 +42,10 @@ hellocarbot
 0
 
 #start_time : 2021.02.28
-#end time : 
+#end time : 2021.03.05
+
+#배운점 : 해싱, string함수 사용법
+#궁금한점 : 해시테이블 사이즈에 관해 궁금증이생겼다. 이 문제에서 어느정도 size가 제일 시간낭비가 없는지 궁금하다. 너무 작으면 체이닝이 길어지니까 탐색에서 오래걸리고 너무 크면 인덱스 하나하나 조사하는데 오래걸리고. 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -90,6 +93,7 @@ void InsertHash(char a[],int num,int size){
     int hashIndex;
     Node *newNode=Creat_node(a,num);
     hashIndex=Hashfuntion(a,size);
+    //printf("index=%d\n",hashIndex);
     p=hashTable[hashIndex].head;
     if(p==NULL){
         hashTable[hashIndex].head=newNode;
@@ -97,17 +101,16 @@ void InsertHash(char a[],int num,int size){
         return;
     }
     else{
-        while(p!=NULL && strcmp(p->data,a)!=0){
+        while(p->next!=NULL && strcmp(p->data,a)!=0){
             p=p->next;
         }
-        if( strcmp(p->data,a)==0){
+        if(strcmp(p->data,a)==0){
             p->number=p->number+num;
-            return;
         }
         else{
-            newNode->next=p;
+            newNode->next=NULL;
             p->next=newNode;
-        return;
+            return;
         }
     }
 }
