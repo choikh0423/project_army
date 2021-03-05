@@ -179,3 +179,22 @@ int main() {
 
 #시도1
 //Segmentation fault 오류떴다 내일 수정해보겠다.
+
+#2021.03.05
+#시도2(성공)
+//내 코드에서 반례는 ab라는 문자열과 ba라는 문자열이 들어왔을 때 였다.
+//ab와 ba는 hashfuntion을 지나오면 같은 키값을 가진다 이 때에 해시테이블에 넣는 것을 주의하면 될것이다.
+// (_이전코드_)
+   while(p!=NULL && strcmp(p->data,a)!=0){ //<-여기서 반복문이 끝날때는 p==NULL이되거나 두 문자열이 같을때이다 
+            p=p->next;
+        }
+        if( strcmp(p->data,a)==0){ //<-위에서 p==NULL이라서 반복문이 끝낫다면은 여기있는 p->data라는 접근에서 오류가 나게된다.
+            p->number=p->number+num;
+            return;
+        }
+        else{
+            newNode->next=p; //<-p==NULL이 되서 반복문이 끝났다면 여기서 마지막 노드에 붙여줘야되는데 이미 포인터p는 널을가르키고 더이상 지나온 노드를 가르킬수없다.
+            p->next=newNode;
+        }
+//그래서 애초에 반복문에서 p->next!=NULL로 바꿔야 else문에서 마지막 노드뒤에 newNode를 붙일 수 있다.
+//그리고 이렇게해야 if문에서 p->data에서 세그먼테이션 오류가 안뜰것이다.
