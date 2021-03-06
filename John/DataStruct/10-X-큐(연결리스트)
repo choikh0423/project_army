@@ -1,0 +1,73 @@
+#start_time : 2021.03.06
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node{
+    int value;
+    struct Node *next;
+}Node;
+
+typedef struct Que{
+    Node *head;
+}Que;
+
+Que *Q=NULL;
+
+Node* create_node(int value){
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->value=value;
+    newNode->next=NULL;
+    return newNode;
+}
+
+void Enqueue(int value){
+    Node *newNode=create_node(value);
+    Node* p;
+    p=Q->head;
+    if(p==NULL){
+        Q->head=newNode;
+    }
+    else{
+        while(p->next!=NULL){
+            p=p->next;
+        }
+        p->next=newNode;
+    }
+}
+int Dequeue(){
+    if(Q->head==NULL){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    int value;
+    Node *p;
+    p=Q->head;
+    value=Q->head->value;
+    Q->head=Q->head->next;
+    free(p);
+    return value;
+}
+
+int main() {
+    Q=(Que*)malloc(sizeof(Que));
+    int n,k;
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        scanf(" %d",&k);
+        Enqueue(k);
+    }
+    for(int i=0;i<n;i++){
+        printf("%d\n",Dequeue());
+    }
+    return 0;
+}
+
+#시도 1
+//구현은 잘되서 다른사람들의 코드들과 비교를 해봤다.
+//큐에 기본적으로 들어가야하는 front, rear 개념을 빼먹어버렸다 다시해보겠다.
+//지금 내가짠 코드는 front, rear를 넣지않았지만 보면은 front, rear가 모두 첫노드를 가르키는 형식과 같다고 볼수 있다.
+//하지만 queue는 front가 첫노드를 가르켜야하고 rear는 제일 뒷노드를 가르켜야한다.
+//한마디로 선입선출 구조의 queue에서는 Enqueue()는 rear의 뒤에 새로운 데이터를추가, Dequeue()는 front에있는 데이터를 빼는것.
+//다시 만들어보겠다.
