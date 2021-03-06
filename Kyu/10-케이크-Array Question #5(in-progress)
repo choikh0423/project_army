@@ -51,3 +51,17 @@ def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders):
   
 # 3.5 아직 recursion 생각중. 근무 들어가서 더 생각해볼 예정. 오늘 컴퓨터 시간은 많았지만 다른것들 하느라 시간을 못씀. 내일은 효율성에 대한 검토도 필요할 듯.
   
+# 3.6
+def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders):
+    
+    if not take_out_orders and not dine_in_orders and not served_orders:
+        return True
+
+    else:
+        if served_orders[0] == take_out_orders[0]:
+            is_first_come_first_served(take_out_orders[1:], dine_in_orders, served_orders[1:])
+        elif served_orders[0] == dine_in_orders[0]:
+            is_first_come_first_served(take_out_orders, dine_in_orders[1:], served_orders[1:])
+        else:
+            return False
+# 만들어내기는 했지만 돌아가지는 않음. 내일은 시간을 더 많이 들이고 효율적으로해서 반드시 끝내고 이번주 목표를 끝낼 것.
