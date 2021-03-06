@@ -1,0 +1,54 @@
+#start_time : 2021.03.06_15:10
+#end_time : 2021.03.06_15:28
+
+#배운점 : 스택 구현에 대해서 배웠다. last in last out 이라는 것만 유의하면서 혼자 만들어보고 인터넷에 떠도는거랑 비교했는데 얼추 비슷했다.
+
+#내코드
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int size;
+int *STACK;
+int top=-1;
+
+void push(int data){
+    if(top>=30){
+        printf("오버플로우\n");
+        return;
+    }
+    STACK[++top]=data;
+    return;
+}
+
+int pop(){
+    if(top<0){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    return STACK[top--];
+}
+
+void print_stack(){
+    if(top<0){
+        printf("아무것도 없습니다.\n");
+        return;
+    }
+    for(int i=top;i>=0;i--){
+        printf("stack[%d]=%d\n",i,STACK[i]);
+    }
+}
+
+int main() {
+    int k;
+    scanf("%d",&size);
+    STACK=(int*)malloc(sizeof(int)*size);
+    for(int i=0;i<size;i++){
+        scanf(" %d",&k);
+        push(k);
+    }
+    print_stack();
+    for(int i=0;i<size;i++){
+        printf("%d\n",pop());
+    }
+}
