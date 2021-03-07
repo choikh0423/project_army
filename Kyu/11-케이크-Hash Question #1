@@ -1,0 +1,59 @@
+  
+# 시작시간: ---
+# 종료시간: ---
+# 날짜: 21.03.07
+
+문제: 
+
+(구) 답:
+    # Determine if two movie runtimes add up to the flight length
+    movie_lengths_seen = set()
+    
+    for first_movie_length in movie_lengths:
+        matching_second_movie_length = flight_length - first_movie_length
+        if matching_second_movie_length in movie_lengths_seen:
+            print(movie_lengths_seen)
+            return True
+        movie_lengths_seen.add(first_movie_length)
+    
+    return False
+
+
+
+# Brute force answer
+
+    # for i in range(len(movie_lengths)):
+    #     second_movie_length = flight_length - movie_lengths[i]
+    #     for j in range(len(movie_lengths)):
+    #         if j != i and (movie_lengths[j]==second_movie_length):
+    #             return True
+                
+    # return False
+
+
+# Binary Search answer (incomplete)
+# def binary_search(target, nums):
+#     floor_index = -1
+#     ceiling_index = len(nums)
+    
+#     while floor_index + 1 < ceiling_index:
+#         distance = ceiling_index - floor_index
+#         half_distance = distance // 2
+#         guess_index = floor_index + half_distance
+        
+#         guess_value = nums[guess_index]
+        
+#         if guess_value == target:
+#             return True
+            
+#         elif guess_value > target:
+#             ceiling_index = guess_index
+            
+#         else:
+#             floor_index = guess_index
+            
+#     return False
+
+    # for i in movie_lengths:
+    #     target_length = flight_length - i
+    #     binary_search(target_length, movie_lengths)
