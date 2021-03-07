@@ -91,3 +91,7 @@ def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders, d
         else:
             return False
 # Recursion은 사용하고 Index Slicing은 사용하지 않은 채로 만든 함수. 물론 DRY가 필요하고 정교함이 더해져야하지만 이걸로도 충분하다. 사실 답안지는 결국 나의 1차시도 답안을 썼다...
+# 사실 Recursion을 사용한 3차 시도 함수는 Time Complexity는 O(n)이지만 Space Complexity는 O(m), 왜냐하면 풀인지 아닌지 계속 확인하는 함수를 만들어내기 때문 - 함수가 불릴때마다
+# 그래서 사실 1차시도에 만들어낸 함수가 Time Complexity는 O(n), Space Complexity는 O(1)로 가장 적합하다.
+# 배워야 할 점: 무조건 재귀함수를 쓴다고 해서 더 효율성이 높아지는 것은 아니다. 상황에 따라 생각하자. 
+  그리고, 효율성을 따지는 것도 좋지만 이 문제의 input들은 크기가 작다(order가 들어와봐야 100단위를 넘겠는가) 그렇기 때문에, 효율성 자체를 따지는게 무의미 할 수 있다.
