@@ -1,0 +1,103 @@
+#문제
+당신의 상관은 당신이 작년에 회사의 실적에 얼마나 도움이 되었는지 횟수를 세었다.
+불행히도 당신의 상관은 때때로 횟수를 틀리게 읽는다.
+다행히도 당신의 상관은 잘못된 숫자를 읽은 것을 인식하면 ‘zero’라고 말한다. 이는 ‘직전의 숫자는 무시한다’는 것을 의미한다. 
+불행히고 당신의 상관은 실수를 반복할 수 있고, 매 실수 마다 ‘zero’라고 말한다. 
+예를 들면 당신의 상관이 ‘One, three, five, four, zero, zero, seven, zero, zero, six’라고 말한 것은 7을 의미하는 것인데 다음의 표를 보면 알 수 있다.
+
+상관의 명령	현재 숫자	설명
+"one, three, five, four"	1, 3, 5, 4	4개의 숫자를 기록
+"zero, zero"	1, 3	마지막 두 숫자를 삭제
+"seven"	1, 3, 7	이전의 숫자 끝에 7을 추가
+"zero, zero"	1	마지막 두 숫자를 삭제
+"six"	1, 6	마지막 남은 숫자들, 합은 7
+어느 순간이나 당신의 상관은 ‘zero’라고 말할 수 있으며, 만약 모든 숫자들이 무시되면 그 합은 0이 된다. 
+상관이 말하는 문구를 입력받아 정확한 합을 구하는 프로그램을 작성하시오.
+
+입력
+첫 번째 줄에는 0(zero)을 포함하는 정수 K를 입력받는다.
+그 다음 K줄동안 1부터 100까지의 정수 또는 0을 입력 받는다.
+
+[입력값의 정의역]
+1<=k<=100,000
+
+출력
+정확한 합을 출력한다.
+
+입력 예시   
+10
+1
+3
+5
+4
+0
+0
+7
+0
+0
+6
+
+출력 예시
+#start_time : 21.03.07
+#end_time : 21.03.07
+
+#배운점
+//pop()의 출력형 은 int 이지만 
+//int m=pop()처럼 안하고 pop();만 실행해도 받아주는 변수는 없지만 실행이 된다는 것을 깨달았다.
+
+#내 코드
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int size;
+int *STACK;
+int top=-1;
+
+void push(int data){
+    if(top>=size){
+        //printf("오버플로우\n");
+        return;
+    }
+    STACK[++top]=data;
+    return;
+}
+
+int pop(){
+    if(top<0){
+        //printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    return STACK[top--];
+}
+
+void print_stack(){
+    if(top<0){
+        //printf("아무것도 없습니다.\n");
+        return;
+    }
+    for(int i=top;i>=0;i--){
+        printf("stack[%d]=%d\n",i,STACK[i]);
+    }
+}
+
+int main() {
+    int n,k,m;
+    int answer=0;
+    scanf("%d",&n);
+    size=n;
+    STACK=(int*)malloc(sizeof(int)*size);
+    for(int i=0;i<n;i++){
+        scanf(" %d",&k);
+        if(k==0){
+            pop();
+        }
+        else push(k);
+    }
+    while(1){
+        m=pop();
+        if(m==-1)break;
+        else answer+=m;
+    }
+    printf("%d\n",answer);
+}
