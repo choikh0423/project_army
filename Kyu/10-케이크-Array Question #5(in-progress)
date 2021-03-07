@@ -56,12 +56,38 @@ def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders):
     
     if not take_out_orders and not dine_in_orders and not served_orders:
         return True
-
     else:
-        if served_orders[0] == take_out_orders[0]:
-            is_first_come_first_served(take_out_orders[1:], dine_in_orders, served_orders[1:])
-        elif served_orders[0] == dine_in_orders[0]:
-            is_first_come_first_served(take_out_orders, dine_in_orders[1:], served_orders[1:])
+        if take_out_orders and served_orders and served_orders[0] == take_out_orders[0]:
+            return is_first_come_first_served(take_out_orders[1:], dine_in_orders, served_orders[1:])
+            
+        elif dine_in_orders and served_orders and served_orders[0] == dine_in_orders[0]:
+            return is_first_come_first_served(take_out_orders, dine_in_orders[1:], served_orders[1:])
+            
         else:
             return False
-# 만들어내기는 했지만 돌아가지는 않음. 내일은 시간을 더 많이 들이고 효율적으로해서 반드시 끝내고 이번주 목표를 끝낼 것.
+# Recursion을 쓰는 함수이지만 Index Slicing이 들어가기 때문에 O(n^2). 1차 시도와 2차 시도를 합쳐야함
+
+# 3차 시도
+def is_first_come_first_served(take_out_orders, dine_in_orders, served_orders, dine_in_count=0, take_out_count=0, served_order_count=0):
+    
+    dine_in_empty_or_full = len(dine_in_orders) <= dine_in_count
+    take_out_empty_or_full = len(take_out_orders) <= take_out_count
+    served_order_empty_or_full = len(served_orders) <= served_order_count
+    
+    
+    if served_order_empty_or_full and take_out_empty_or_full and dine_in_empty_or_full:
+        return True
+    else:
+        if not served_order_empty_or_full and not take_out_empty_or_full and served_orders[served_order_count] == take_out_orders[take_out_count]:
+            take_out_count += 1
+            served_order_count += 1 
+            return is_first_come_first_served(take_out_orders, dine_in_orders, served_orders, dine_in_count, take_out_count, served_order_count)
+            
+        elif not served_order_empty_or_full and not dine_in_empty_or_full and served_orders[served_order_count] == dine_in_orders[dine_in_count]:
+            dine_in_count += 1
+            served_order_count += 1 
+            return is_first_come_first_served(take_out_orders, dine_in_orders, served_orders, dine_in_count, take_out_count, served_order_count)
+            
+        else:
+            return False
+# Recursion은 사용하고 Index Slicing은 사용하지 않은 채로 만든 함수. 물론 DRY가 필요하고 정교함이 더해져야하지만 이걸로도 충분하다. 사실 답안지는 결국 나의 1차시도 답안을 썼다...
