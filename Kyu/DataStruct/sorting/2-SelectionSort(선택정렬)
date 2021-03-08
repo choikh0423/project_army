@@ -1,5 +1,5 @@
 # 한줄 정리: 
-# Concept Summary: 
+# Concept Summary: Finding the minimum number of the [unsorted] part of the list and placing it as the last index of the [sorted] part.
 
 def SelectionSort(lst):
   for i in range(len(lst)):
