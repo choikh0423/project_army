@@ -1,5 +1,5 @@
 # 한줄 정리: 
-# Concept Summary: 
+# Concept Summary: Comparing inserted number from the last index and swapping to the left until it finds its spot.
 
 def InsertionSort(lst):
   for i in range(len(lst)):
