@@ -30,6 +30,8 @@ def can_two_movies_fill_flight(movie_lengths, flight_length):
    - 접근방식이 인상적이다. O(n^2)인 Brute Force Comparison으로 시작해서 Binary Search를 건너서 Hash로 온다. 이렇듯 단계별 효율성을 생각해볼줄 알아야하는 것 같다.
    - 비행 시간과 첫 영화의 시간차를 사용하는 것도 좋은 아이디어였다. 이렇게되면 무조건 두개의 영화를 요구하게 되며 비행 시간이 너무 짧을 경우를 배제한다. 알아서 negative value를 줌으로써
      없애버리기 때문이다.
+
+# 3.9 시간이 없어서 공책에다가 문제풀고 복습할 것 이다.
      
      
 
