@@ -1,0 +1,61 @@
+#start_time : 2021.03.10
+#end_time :
+
+#배운점
+
+#내코드(내일 완성하겠다.)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Max_Vertex 30
+
+typedef struct Node{
+    int vertex;
+    struct Node *next;
+}Node;
+
+
+typedef struct GraphList{
+    Node *graph[Max_Vertex];
+    int vertexCnt;
+    int edgeCnt;
+}GraphList;
+
+GraphList* Create_Graph(int vertexCnt,int edgeCnt){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=vertexCnt;
+    Graph->edgeCnt=edgeCnt;
+    return Graph;
+}
+
+void addNode(GraphList *H,int v1,int v2){
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    Node *newNode2=(Node*)malloc(sizeof(Node));
+    
+    newNode->vertex=v2;
+    newNode->next=H->graph[v1];
+    H->graph[v1]=newNode;//첫번째 정점에 두번째정점 이어주기
+    
+    newNode2->vertex=v1;
+    newNode2->next=H->graph[v2];
+    H->graph[v2]=newNode2;//두번째 정점에 첫번째 정점이어주기 (무반향이므로.)
+}
+
+void print_Graph(GraphList *H){
+    Node *horse;
+    for(int i=1,i<=H->vertexCnt;i++){
+        horse=H->graph[i];
+        while(horse!=NULL){
+            printf("%d -> ",horse->vertex);
+        }
+        printf("\n");
+    }
+    return;
+}
+
+int main(){
+    GraphList *H=Create_Graph();
+    addNode(H,)
+    return;
+}
