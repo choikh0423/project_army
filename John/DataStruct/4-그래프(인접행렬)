@@ -2,6 +2,50 @@
 #end_time :
 
 #배운점
+//그림을 보여줄 수 있다면 무엇을 표현하고 싶은지 확실히 보여줄 수 있을텐데 아쉽다.
 
 #내코드
 
+(_무방향 무가중치 그래프)
+#include <stdio.h>
+#include <stdlib.h>
+
+int matrix[20][20];
+
+
+int main(){
+    int n,m;
+    int x,y;
+    scanf("%d %d",&n,&m);
+    for(int i=0;i<m;i++){
+        scanf(" %d %d",&x,&y);
+        matrix[x][y]=1;
+        matrix[y][x]=1;
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=n;j++){
+            printf("%2d",matrix[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return;
+}
+입력
+6 8
+1 2
+1 3
+2 3
+2 4
+3 4
+3 5
+4 5
+4 6
+
+출력
+ 0 1 1 0 0 0
+ 1 0 1 1 0 0
+ 1 1 0 1 1 0
+ 0 1 1 0 1 1
+ 0 0 1 1 0 0
+ 0 0 0 1 0 0
