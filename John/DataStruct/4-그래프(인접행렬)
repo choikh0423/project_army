@@ -19,8 +19,8 @@ int main(){
     scanf("%d %d",&n,&m);
     for(int i=0;i<m;i++){
         scanf(" %d %d",&x,&y);
-        matrix[x][y]=1;
-        matrix[y][x]=1;
+        matrix[x][y]=1; //각 정점간의 간선이 존재하는 경우 0->1로 바꿔줌
+        matrix[y][x]=1; //무방향이므로 반대경우도 0->1로 바꿔줌
     }
     for(int i=1;i<=n;i++){
         for(int j=1;j<=n;j++){
