@@ -35,7 +35,7 @@ def can_two_movies_fill_flight(movie_lengths, flight_length):
 
 # 3.10 오늘도 여러모로 시간이 훅 가버려서 공책으로 다 풀어서 내일 2시간동안 다 고치고 복습하고 올리는 작업을 할 것 임.
      
-     
+# 3.12 공책에 하는 마지막날 내일은 무조건 사지방 간다.
 
 (구) 답:
     # Determine if two movie runtimes add up to the flight length
