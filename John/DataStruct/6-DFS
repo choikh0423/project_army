@@ -1,9 +1,156 @@
 #start_time : 2021.03.12
-#end_time : 
+#end_time : 2021.03.13
 
-#
+#배운점
+//깊이우선탐색이란 미로가 있다면 한방향으로 계속가다가 더이상 갈수있는길이 없을경우 젤 최근갈림길로 돌아가서 방문안한 갈림길로 가는것이다.
+//정말 복잡했다. 공책에 한단계한단계 코드 실행해가면서 이해를 했다.
+//스택의 역할은 다시 최근 갈림길로 돌아가기위해 기억하는 공간이였다. 그래서 last in - first out 구조인 스택을 사용하는 것이다.
+//인덱스 간의 이동과 노드간의 이동이 정말 헷갈리게 되는 알고리즘이였다.
+//다시 만들게된다면 어려움없이 만들 수 있을지 모르겠다 꼭 다시한번 만들어봐야겠다.
 
 #내코드
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Max_Vertex 30
+int STACK[30];
+int top=-1;
+
+void push(int data){
+    if(top>=30){
+        printf("오버플로우\n");
+        return;
+    }
+    STACK[++top]=data;
+    return;
+}
+
+int pop(){
+    if(top<0){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    return STACK[top--];
+}
+
+void print_stack(){
+    if(top<0){
+        printf("아무것도 없습니다.\n");
+        return;
+    }
+    for(int i=top;i>=0;i--){
+        printf("stack[%d]=%d\n",i,STACK[i]);
+    }
+}
+
+typedef struct Node{
+    int vertex;
+    struct Node *next;
+}Node;
+
+
+typedef struct GraphList{
+    Node *adj[Max_Vertex];
+    int vertexCnt;
+    int visited[Max_Vertex];
+}GraphList;
+
+
+GraphList* Create_Graph(){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=0;
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->adj[i]=NULL;
+    }
+    return Graph;
+}
+
+void addvertex(GraphList *H,int v){
+    if(H->vertexCnt>=Max_Vertex){
+        printf("정점개수 초과입니다.\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(GraphList *H, int v1, int v2){
+    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
+        printf("없는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->next=H->adj[v1];
+    H->adj[v1]=newNode;
+    
+}
+
+void print_Graph(GraphList *H){
+    Node *horse;
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->adj[i];
+        printf("정점[%d]->",i);
+        while(horse!=NULL){
+            printf("%d-> ",horse->vertex);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+
+void DFS(GraphList* H,int v){ //v정점부터 dfs
+    Node* w;
+    push(v);//처음에 정점을 방문했기때문에 스택에 넣기
+    H->visited[v]=1; //방문했기에 그 정점인덱스를 1로바꿈
+    printf("%d ",v); // 방문하면 프린트.
+    while(top!=-1){ // 스택안에 다 비울때까지.   <-여기 while문의 역할은 모든 곳을 방문하기전까지 끝나지않음
+        v=pop(); // 젤최근에 방문한 정점이 연결된 정점이 다 방문했다면 되돌아가기 시작.(되돌아가는 역할)
+        w=H->adj[v]; // 정점의 인접 정점을 가르킴
+        while(w){ // 가르키는 곳이 null이 아니면.        <-여기 while 문의 역할은 해당 정점이 연결되있는 간선을 다 조사.(여기서 NULL이 됐다는 건 이제 되돌아가야한다는 것. pop을해야된다.
+            if(!H->visited[w->vertex]){ // w를 방문안했을 경우 실행
+                if(top==-1)push(v); // 젤 첫 방문 정점으로 돌아왔을 때 && 방문안한 정점이 남아있을 때.
+                push(w->vertex);//w를 스택에 넣음
+                H->visited[w->vertex]=1;//w를방문했다고 표시
+                printf("%d ",w->vertex);//w프린트
+                v=w->vertex;//다음 정점으로 이동(여기서 다음 정점이동은 인덱스 자체를 이동시키기 위함이다.)
+                w=H->adj[v];//그 정점의 인접 정점을 가르킴.
+            }
+            else w=w->next;// w를 이미 방문했다면 v의 다른 인접정점으로 이동.(여기서 정점이동은 v에게 붙어있는 간선간의 조사이다.)
+        }
+    }
+    
+}
+
+int main(){
+    GraphList *H=(GraphList*)malloc(sizeof(GraphList));
+    H=Create_Graph();
+    for(int i=0;i<7;i++){
+        addvertex(H,i);
+    }
+    addedge(H,0,2);
+    addedge(H,0,1);
+    addedge(H,1,4);
+    addedge(H,1,3);
+    addedge(H,1,0);
+    addedge(H,2,4);
+    addedge(H,2,0);
+    addedge(H,3,6);
+    addedge(H,3,1);
+    addedge(H,4,6);
+    addedge(H,4,2);
+    addedge(H,4,1);
+    addedge(H,5,6);
+    addedge(H,6,5);
+    addedge(H,6,4);
+    addedge(H,6,3);
+    print_Graph(H);
+    printf("\n\n--------------------------\n");
+    printf("DFS(깊이우선탐색) 순서\n");
+    DFS(H,0);
+    return 0;
+}
 
 #2021.03.12
 //우선 그냥 원리만이해하고 만들어보려했으나 인접행렬로 만들기에는 너무 복잡해서 인접리스트로 만들겠다.
