@@ -1,9 +1,195 @@
 #start_time : 2021.03.14 11:19
-#end_time : 
+#end_time : 2021.03.14 11:53
 
-#
+#배운점
+//그래프탐색 중 너비우선탐색 알고리즘에 대해 배웠다.
+//너비우선탐색이란, 하나의 정점에서 시작해서 차례대로 가까운 것부터 탐색. 멀리떨어져있는 것은 가장 나중에 탐색한는 방법이다.
+//어느 경우에 사용 할 수 있는지 생각해봐야할 것 같다. 두 정점사이의 최단경로 찾기 or 임의의 경로 찾기 할 때 사용 된다는데 왜 인지모르겠다,.
+//'Prim', 'Dijkstra' 알고리즘과 유사하다고한다. 다음은 프림 그다음 다익스트라 알고리즘 공부하겠다.
+
+#출력
+정점[0]->1-> 2-> 
+정점[1]->0-> 3-> 4-> 
+정점[2]->0-> 4-> 
+정점[3]->1-> 6-> 
+정점[4]->1-> 2-> 6-> 
+정점[5]->6-> 
+정점[6]->3-> 4-> 5-> 
+
+
+--------------------------
+BFS(너비우선탐색) 순서
+0 1 2 3 4 6 5 
 
 #내코드
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Max_Vertex 30
+
+typedef struct Node{
+    int vertex;
+    struct Node *next;
+}Node;
+
+typedef struct Que{
+    Node *head;
+    Node *front;
+    Node *rear;
+}Que;
+
+Que *Q=NULL;
+
+Node* create_node(int value){ //노드 생성
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=value;
+    newNode->next=NULL;
+    return newNode;
+}
+
+void Enqueue(int value){//젤 뒤 노드에 붙여준다.
+    Node *newNode=create_node(value);
+    if(Q->front==NULL){
+        Q->head=newNode;
+        Q->front=newNode;
+        Q->rear=newNode;
+        return;
+    }
+    else{
+        Q->rear->next=newNode;
+        Q->rear=newNode;
+        return;
+    }
+}
+int Dequeue(){//젤앞노드것을 뺀다.
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    int value;
+    Node *old_front;
+    old_front=Q->front;
+    value=Q->front->vertex;
+    Q->head=Q->head->next;
+    Q->front=Q->front->next;
+    free(old_front);
+    return value;
+}
+
+int peak(){//젤 앞의 값을 보여줌
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+    }
+    return Q->front->vertex;
+}
+
+
+
+typedef struct GraphList{
+    Node *adj[Max_Vertex];
+    int vertexCnt;
+    int visited[Max_Vertex];
+}GraphList;
+
+
+GraphList* Create_Graph(){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=0;
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->adj[i]=NULL;
+    }
+    return Graph;
+}
+
+void addvertex(GraphList *H,int v){
+    if(H->vertexCnt>=Max_Vertex){
+        printf("정점개수 초과입니다.\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(GraphList *H, int v1, int v2){
+    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
+        printf("없는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->next=H->adj[v1];
+    H->adj[v1]=newNode;
+    
+}
+
+void print_Graph(GraphList *H){
+    Node *horse;
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->adj[i];
+        printf("정점[%d]->",i);
+        while(horse!=NULL){
+            printf("%d-> ",horse->vertex);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+
+void BFS(GraphList *H,int v){//BFS
+  Node *w;
+  H->visited[v]=1;
+  Enqueue(v);
+  printf("%d ",v);
+  while(Q->front!=NULL){
+      v=Dequeue();
+      w=H->adj[v];
+      while(w){
+          if(H->visited[w->vertex]==0){
+              printf("%d ",w->vertex);
+              H->visited[w->vertex]=1;
+              Enqueue(w->vertex);
+              w=w->next;
+          }
+          else w=w->next;
+      }
+  }
+}
+
+
+
+int main(){
+    Q=(Que*)malloc(sizeof(Que));
+    GraphList *H=(GraphList*)malloc(sizeof(GraphList));
+    H=Create_Graph();
+    for(int i=0;i<7;i++){
+        addvertex(H,i);
+    }
+    addedge(H,0,2);
+    addedge(H,0,1);
+    addedge(H,1,4);
+    addedge(H,1,3);
+    addedge(H,1,0);
+    addedge(H,2,4);
+    addedge(H,2,0);
+    addedge(H,3,6);
+    addedge(H,3,1);
+    addedge(H,4,6);
+    addedge(H,4,2);
+    addedge(H,4,1);
+    addedge(H,5,6);
+    addedge(H,6,5);
+    addedge(H,6,4);
+    addedge(H,6,3);
+    print_Graph(H);
+    printf("\n\n--------------------------\n");
+    printf("BFS(너비우선탐색) 순서\n");
+    BFS(H,0);
+    return 0;
+}
+
 #2021.03.14
 //어제 DFS구현방식을 배우고 나니까 BFS는 혼자 가능 할 것 같다는 생각이 들었다. 혼자 한번해보겠다.
+//세그멘테이션 폴트 오류가 떴다 어디선가 접근하지 못하는 곳에 접근하려고 하고있다.
+//어디서인지 하나씩 코드 지워가면서 확인해봤더니 큐에 데이터 넣으려고할때 문제가 생겼다. 알고보니 큐를 데이터 할당을 안시켜줘서 일어난 일이였다.
+//성공!!
