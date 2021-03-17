@@ -1,13 +1,32 @@
 #start_time : 2021.03.16 12:12
-#end_time :
+#end_time : 2021.03.17 12:04
 
 #배운점
 //unionfind 란 쉽게 말해 합집합찾기알고리즘이다.
 //서로 다른 두노드를 선택했을 때 두 노드가 같은 그래프 안에 속하는지 확인하는 알고리즘이다.
+//union_(v1,v2)함수는 두 정점을 연결해주는(합치는, 같은집합에 넣는)역할을 한다. 여기서 이미 그 트리(집합)에 정점이 포함되어있다면 연결해주지 않는다(순환이생기므로, 집합에 이미 들어가있으므로)
+//Find(v)함수는 v의 부모노드(루트노드)가 무엇인지 보여주는 역할을 한다.
 //이걸 배우는 이유는 크루스칼 알고리즘 할때 트리를 생성할때 순환이 생기면 안되는데 그 역할을 할 수 있는 것이 unionfind이다.
+//이제는 구조체를 너무 많이쓰다보니까 확실히 익숙해진 것 같다. 예전에 썼던 코드를 단순히 복붙하는게 아니라, 처음부터 적어도 자연스레 내가 필요한 것이 무엇인지 파악하고 사용하는 힘이 생겼다.
+
 
 #출력
 
+싸이클이 생성되므로 제한합니다.(0 - 5)
+
+정점[0]->1-> 
+정점[1]->2-> 0-> 
+정점[2]->4-> 1-> 
+정점[3]->
+정점[4]->2-> 5-> 
+
+
+!!각 정점이 가르키는 부모노드는!!
+0 1 2 3 4 
+0 0 0 3 0 
+
+
+#내코드
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,14 +37,14 @@ typedef struct Node{
     struct Node* link;
 }Node;
 
-typedef struct GrapeList{
+typedef struct graphList{
     Node* adj[MaxVertex];
     int parent[MaxVertex];
     int vertexCnt;
-}GrapeList;
+}graphList;
 
-GrapeList create_grape(){
-    GrapeList *H=(GrapeList*)malloc(sizeof(GrapeList));
+graphList* create_graph(){
+    graphList *H=(graphList*)malloc(sizeof(graphList));
     for(int i=0;i<MaxVertex;i++){
         H->adj[i]=NULL;
     }
@@ -33,16 +52,19 @@ GrapeList create_grape(){
         H->parent[i]=i;
     }
     H->vertexCnt=0;
+    return H;
 }
 
-int Find(GrapeList *H,int v){
+int Find(graphList *H,int v){
+    //printf("%d %d\n",v,H->parent[v]);
     if(v==H->parent[v])return H->parent[v];
     else{
+        //printf("다름\n");
         return H->parent[v]=Find(H,H->parent[v]);
     }
 }
 
-void addvertex(GrapeList *H,int v){
+void addvertex(graphList *H,int v){
     if(v>=MaxVertex){
         printf("!초과!\n");
         return;
@@ -50,7 +72,7 @@ void addvertex(GrapeList *H,int v){
     else H->vertexCnt++;
 }
 
-void Union_(GrapeList *H,int v1,int v2){
+void Union_(graphList *H,int v1,int v2){
     if(Find(H,v1)!=Find(H,v2)){
         Node* newNode=(Node*)malloc(sizeof(Node));
         newNode->vertex=v2;
@@ -69,12 +91,13 @@ void Union_(GrapeList *H,int v1,int v2){
         return;
     }
     else{
-        printf("싸이클이 생성되므로 제한합니다.\n");
+        printf("싸이클이 생성되므로 제한합니다.(%d - %d)\n",v1,v2);
         return;
     }
 }
-void print_Graph(GrapeList *H){
+void print_Graph(graphList *H){
     Node *horse;
+    printf("\n");
     for(int i=0;i<H->vertexCnt;i++){
         horse=H->adj[i];
         printf("정점[%d]->",i);
@@ -84,20 +107,38 @@ void print_Graph(GrapeList *H){
         }
         printf("\n");
     }
+    printf("\n");
     return;
 }
 
+void print_parent(graphList *H){
+    printf("\n!!각 정점이 가르키는 부모노드는!!\n");
+    for(int i=0;i<H->vertexCnt;i++){
+        printf("%d ",i);
+    }
+    printf("\n");
+    for(int i=0;i<H->vertexCnt;i++){
+        printf("%d ",H->parent[i]);
+    }
+    printf("\n");
+}
+
 int main(){
-    GrapeList *A=(GrapeList*)malloc(sizeof(GrapeList));
+    graphList *A=(graphList*)malloc(sizeof(graphList));
+    A=create_graph();
     for(int i=0;i<5;i++){
         addvertex(A,i);
     }
-    print_Graph(A);
     Union_(A,0,1);
     Union_(A,1,2);
-    Union_(A,0,2);
+    Union_(A,4,5);
+    Union_(A,4,2);
+    Union_(A,0,5);
+    print_Graph(A);
+    print_parent(A);
     return 0;
 }
+
 #2021.03.16
 //26번째 줄을 보면 그래프에 parent라는 배열을 추가시켰다. 이 배열은 각 노드가 결과적으로 가르키는 부모노드가 누구인가를 가르킨다
 //예를들어 parent[2]와 parent[3] 의 값이 둘다 1로 같다면은 둘은 같은 그래프에속하고 부모노드가 1이라는 것을 의미한다.
@@ -114,3 +155,7 @@ int main(){
 싸이클이 생성되므로 제한합니다.
 
 //현재의 코드로 해봤지만 (0,1) (1,2) (0,2)를하면 첫번째 두번째는 삽입되고 세번째만 싸이클생겼다는 경고문이떠야하는데 세번다 떴다. 이것은 내일 다시해보겠다.
+
+#2021.03.17
+#시도2(성공)
+//문제점은 create_graph라는 초기화 함수를 만들어줬음에도 불구하고 쓰지않아서 A->parent[i]가 모두 0으로 되어있었다. 이미 부모가 전부 0정점에 되어있으므로(이미 전부 같은집합)이어주지않았던 것이다./
