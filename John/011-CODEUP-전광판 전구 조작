@@ -1,0 +1,136 @@
+#문제 
+문제 분류 : DFS/BFS
+문제 설명    
+
+길동이는 아래 그림과 같이 M×N 개인 전광판 위에 놓여있는 켜져있는 전구(흰색)와 꺼져 있는 전구(검은색)들을 가지고 실험을 한다.
+https://codeup.kr/upload/201508/2015t51.jpg
+임의의 전구X에 대해서 상, 하, 좌, 우로 인접한 4개의 전구들을 X의 이웃이라고 한다.
+길동이는 위의 전구들 중에서 하나를 선택해서 전구를 켜거나 끌 수 있다.
+그러면 이 전구의 이웃이고 같은 상태로 있는 전구들도 상태가 바뀐다.
+계속해서 반복적으로 상태가 바뀐 전구의 이웃들 또한 같은 상태로 바뀐다.
+예를 들어, 위의 그림에서 전구1번을 켜면 'ㄷ'자 모양의 꺼진 전구들은 모두 켜지므로 아래의 그림과 같이 된다
+https://codeup.kr/upload/201508/2015t52.jpg
+그런 다음 전구3을 켜면 아래와 같이 된다.
+https://codeup.kr/upload/201508/2015t53.jpg
+
+그리고 전구6을 켜고, 마지막으로 전구5를 켜면 모든 전구는 켜진 상태가 된다.
+따라서 4번의 조작으로 모든 전구가 켜진다.
+같은 방법으로 처음 상태에서 전구2와 전구4를 끄는 두 번의 조작으로 모든 전구가 꺼진 상태로 바꿀 수 있다.
+켜져 있거나 꺼져 있는 전구들을 조작하여 모두 켜진 상태가 되도록 하는 최소 조작횟수와 모든 꺼진 상태로 되도록 하는 최소조작횟수를 찾는 프로그램을 작성하라
+추가 설명) 끄는 동작을 할때에는 스위치를 계속 끄고, 켜는 동작을 할 때에는 계속 켤 때의 최소 조작 횟수입니다.
+
+입력
+첫째 줄에 전광판의 크기를 나타내는 세로 길이 M과 가로 길이 N이 입력된다. (2<=M,N<=100인 자연수)
+둘째줄 부터 M줄에 걸쳐 N열 만큼의 전구들의 상태가 주어진다. 이때 켜진 상태는 1, 꺼진 상태는 0으로 입력된다.
+
+출력
+모든 전구를 켜기 위한 최소 조작횟수와 모두 끄기 위한 최소조작횟수를 각각 공백으로 구분하여 출력하라.
+
+입력 예시   
+5 6
+0 0 1 0 1 1 
+0 1 1 0 0 0 
+0 0 1 0 0 0 
+1 1 1 1 1 1 
+0 0 0 1 0 0 
+
+출력 예시
+4 2
+
+#start_time : 21.03.17
+
+#배운점
+
+#내코드
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Max_Vertex 1000
+
+typedef struct Node{
+    int vertex;
+    struct Node *next;
+}Node;
+
+
+typedef struct GraphList{
+    Node *graph[Max_Vertex];
+    int vertexCnt;
+}GraphList;
+
+
+GraphList* Create_Graph(){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=0;
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->graph[i]=NULL;
+    }
+    return Graph;
+}
+
+void addvertex(GraphList *H,int v){
+    if(H->vertexCnt>=Max_Vertex){
+        printf("정점개수 초과입니다.\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(GraphList *H, int v1, int v2){
+    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
+        printf("없는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->next=H->graph[v1];
+    H->graph[v1]=newNode;
+    
+    Node *newNode2=(Node*)malloc(sizeof(Node));
+    newNode2->vertex=v1;
+    newNode2->next=H->graph[v2];
+    H->graph[v2]=newNode2;
+}
+
+void print_Graph(GraphList *H){
+    Node *horse;
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->graph[i];
+        printf("정점[%d]->",i);
+        while(horse!=NULL){
+            printf("%d-> ",horse->vertex);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+
+int main(){
+    GraphList *H=(GraphList*)malloc(sizeof(GraphList));
+    int n,m;
+    scanf("%d %d ", &m, &n);
+    int **array=(int**)malloc(sizeof(int*)*m);
+    for(int i=0;i<m;i++){
+        array[i]=(int*)malloc(sizeof(int)*n);
+    }
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d ",&array[i][j]);    
+        }
+    }
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            printf(" %d",array[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+
+#2021.03.17
+//일단은 입력을 받는 것부터 만들었다.
+//이차원배열 동적할당하는법을 배웠다,
+//출력까지 똑같이 잘나온다.
