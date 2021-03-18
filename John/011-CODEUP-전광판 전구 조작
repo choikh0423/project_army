@@ -1,4 +1,4 @@
-#문제 
+#문제 https://codeup.kr/problem.php?id=4060
 문제 분류 : DFS/BFS
 문제 설명    
 
@@ -38,99 +38,98 @@ https://codeup.kr/upload/201508/2015t53.jpg
 4 2
 
 #start_time : 21.03.17
+#end_time : 21.03.18
 
 #배운점
+//진짜 하루종일 이 문제 생각만 한것같다 그냥 포기할까 라는 생각도 많이했지만 그러고싶지않았다. 풀 때 인터넷에 있는 코드도 살짝 참고했다. 
+//감이 안와서 진짜 살짝 어떤방식으로 구현했는지 느낌만 보고 바로 노트에 끄적이러 갔다.
+//dfs 와 bfs 는 그래프에서만 쓰는 것이 아니라 개념일뿐이다.
+//이차원 배열 동적할당 하는법을 배웠다.
+//재귀함수를 써봤는데 재귀함수 쪽을 좀더 공부할 필요가있어보인다.
+//너무 어려웠다..아직 부족한 것 같다
 
 #내코드
 
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-#define Max_Vertex 1000
+#define True 1
+#define False 0
 
-typedef struct Node{
-    int vertex;
-    struct Node *next;
-}Node;
-
-
-typedef struct GraphList{
-    Node *graph[Max_Vertex];
-    int vertexCnt;
-}GraphList;
+int **visited;
+int **array;
+int n,m;
+int dy[4]={0,0,1,-1}; //y가 열
+int dx[4]={1,-1,0,0}; //x가 행
 
 
-GraphList* Create_Graph(){
-    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
-    Graph->vertexCnt=0;
-    for(int i=0;i<Max_Vertex;i++){
-        Graph->graph[i]=NULL;
-    }
-    return Graph;
-}
-
-void addvertex(GraphList *H,int v){
-    if(H->vertexCnt>=Max_Vertex){
-        printf("정점개수 초과입니다.\n");
-        return;
-    }
-    H->vertexCnt++;
-}
-
-void addedge(GraphList *H, int v1, int v2){
-    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
-        printf("없는 정점입니다.\n");
-        return;
-    }
-    Node *newNode=(Node*)malloc(sizeof(Node));
-    newNode->vertex=v2;
-    newNode->next=H->graph[v1];
-    H->graph[v1]=newNode;
-    
-    Node *newNode2=(Node*)malloc(sizeof(Node));
-    newNode2->vertex=v1;
-    newNode2->next=H->graph[v2];
-    H->graph[v2]=newNode2;
-}
-
-void print_Graph(GraphList *H){
-    Node *horse;
-    for(int i=0;i<H->vertexCnt;i++){
-        horse=H->graph[i];
-        printf("정점[%d]->",i);
-        while(horse!=NULL){
-            printf("%d-> ",horse->vertex);
-            horse=horse->next;
+void On(int x, int y){
+    if(array[x][y]==1 || visited[x][y]==True)return; // 이미꺼져 있거나 방문했다면 무시하고 이전 배열로 돌아가라.
+    //printf("들어옴\n");
+    visited[x][y]=True; // 방문 했다고 표시.
+    for(int i=0;i<4;i++){
+        
+        if((i==1 && x==0) || (i==2 && y==n-1) || (i==3 && y==0) ||(i==0 && x==m-1)) continue; // 인덱스가 -1이 되거나 최대보다 커질경우 넘어가라.
+        else if(array[x+dx[i]][y+dy[i]]==0){ // 인접 배열이 꺼져있다면 그애도 켜라
+          On(x+dx[i],y+dy[i]); //
         }
-        printf("\n");
     }
-    return;
+    
+}
+
+void Off(int x, int y){
+    if(array[x][y]==0 || visited[x][y]==True)return;
+    //printf("들어옴\n");
+    visited[x][y]=True;
+    for(int i=0;i<4;i++){
+        
+        if((i==1 && x==0) || (i==2 && y==n-1) || (i==3 && y==0) ||(i==0 && x==m-1)) continue;
+        else if(array[x+dx[i]][y+dy[i]]==1){
+          Off(x+dx[i],y+dy[i]);
+        }
+    }
+    
 }
 
 int main(){
-    GraphList *H=(GraphList*)malloc(sizeof(GraphList));
-    int n,m;
+    int on_cnt=0,off_cnt=0;
     scanf("%d %d ", &m, &n);
-    int **array=(int**)malloc(sizeof(int*)*m);
+    array=(int**)malloc(sizeof(int*)*m);
     for(int i=0;i<m;i++){
-        array[i]=(int*)malloc(sizeof(int)*n);
+        array[i]=(int*)malloc(sizeof(int)*n); //2차원 배열 동적할당
+    }
+    visited=(int**)malloc(sizeof(int*)*m);
+    for(int i=0;i<m;i++){
+        visited[i]=(int*)malloc(sizeof(int)*n);
     }
     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
             scanf("%d ",&array[i][j]);    
         }
     }
-    for(int i=0;i<m;i++){
+     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
-            printf(" %d",array[i][j]);
+            if(array[i][j]==0 && visited[i][j]==False){ //  꺼져있고 방문안했으면 켜라
+                On(i,j);
+                on_cnt++;
+            }
+            else if(array[i][j]==1 && visited[i][j]==False){ // 켜져있고 방문안했으면 꺼라
+                Off(i,j);
+                off_cnt++;
+            }
         }
-        printf("\n");
     }
+    printf("%d %d ",on_cnt,off_cnt);
     return 0;
 }
+
 
 
 #2021.03.17
 //일단은 입력을 받는 것부터 만들었다.
 //이차원배열 동적할당하는법을 배웠다,
 //출력까지 똑같이 잘나온다.
+
+#2021.03.18(성공!!)
+//dfs bfs를 배울때 그래프를 사용했다보니까 꼭 그래프를 써야한다는 강박관념에 사로잡혀있었다.
+//dfs bfs는 개념일 뿐이다 저기 있는 이차원 배열자체를 dfs할 생각을 해봤다.
