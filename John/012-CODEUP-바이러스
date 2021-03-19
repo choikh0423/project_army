@@ -31,3 +31,87 @@ https://codeup.kr/upload/201304/image/virus.png
 #배운 점
 
 #내코드
+#include<stdio.h>
+#include<stdlib.h>
+
+#define MaxVertex 100
+
+typedef struct Node{
+    int vertex;
+    struct Node *next;
+}Node;
+
+typedef struct GraphList{
+    Node* adj[MaxVertex];
+    int vertexCnt;
+}GraphList;
+
+GraphList* Create_Graph(){
+    GraphList *H=(GraphList*)malloc(sizeof(GraphList));
+    H->vertexCnt=0;
+    for(int i=0;i<MaxVertex;i++){
+        H->adj[i]=NULL;
+    }
+    return H;
+}
+
+GraphList *H;
+
+void addvertex(int v){
+    if(v>MaxVertex){
+        printf("!overflow!\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(int v1,int v2){
+    if(v1>H->vertexCnt || v2>H->vertexCnt){
+        printf("존재하지않는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->next=H->adj[v1];
+    H->adj[v1]=newNode;
+    
+    Node *newNode2=(Node*)malloc(sizeof(Node));
+    newNode2->vertex=v1;
+    newNode2->next=H->adj[v2];
+    H->adj[v2]=newNode2;
+    
+    return;
+}
+
+void print_graph(){
+    Node *horse;
+    for(int i=1;i<=H->vertexCnt;i++){
+        horse=H->adj[i];
+        printf("정점[%d] -> ",i);
+        while(horse){
+            printf("%d -> ",horse->vertex);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+}
+
+int main(){
+    int m,n;
+    int v1,v2;
+    H=Create_Graph();
+    scanf("%d %d ",&m,&n);
+    for(int i=0;i<m;i++){
+        addvertex(i);
+    }
+    for(int i=0;i<n;i++){
+        scanf("%d %d ",&v1,&v2);
+        addedge(v1,v2);
+    }
+    print_graph();
+    return 0;
+}
+
+#2021.03.19
+//옛날에 썼던 코드를 들고와서 쓸수도 있었지만, 그래프 만드는 감각이 익숙해지기 위해 그냥 처음부터 다 코딩했다.
+//그래프 생성, 정점 삽입, 간선 삽입, 그래프프린트 까지 만들었고 실질적인 알고리즘은 조금 이따가 다시 와서 만들겠다.
