@@ -30,7 +30,6 @@ https://codeup.kr/upload/201304/image/virus.png
 
 #배운 점
 
-#내코드
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -44,7 +43,26 @@ typedef struct Node{
 typedef struct GraphList{
     Node* adj[MaxVertex];
     int vertexCnt;
+    int visited[MaxVertex];
 }GraphList;
+
+typedef struct Queue{
+    Node *head;
+    Node *front;
+    Node *rear;
+}Queue;
+
+Queue *Q;
+GraphList *H;
+int virus_cnt=0;
+
+Queue* create_Queue(){
+    Queue* Q=(Queue*)malloc(sizeof(Queue));
+    Q->head=NULL;
+    Q->front=NULL;
+    Q->rear=NULL;
+    return Q;
+}
 
 GraphList* Create_Graph(){
     GraphList *H=(GraphList*)malloc(sizeof(GraphList));
@@ -55,8 +73,38 @@ GraphList* Create_Graph(){
     return H;
 }
 
-GraphList *H;
+void Enqueue(int v){
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v;
+    newNode->next=NULL;
+    if(Q->head==NULL){
+        Q->head=newNode;
+        Q->front=newNode;
+        Q->rear=newNode;
+        return;
+    }
+    else{
+        Q->rear->next=newNode;
+        Q->rear=newNode;
+        return;
+    }
+}
 
+
+int Dequeue(){//젤앞노드것을 뺀다.
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    int value;
+    Node *old_front;
+    old_front=Q->front;
+    value=Q->front->vertex;
+    Q->head=Q->head->next;
+    Q->front=Q->front->next;
+    free(old_front);
+    return value;
+}
 void addvertex(int v){
     if(v>MaxVertex){
         printf("!overflow!\n");
@@ -96,10 +144,41 @@ void print_graph(){
     }
 }
 
+void BFS(int v){//BFS
+  
+  Node *w;
+  H->visited[v]=1;
+  Enqueue(v);
+  //printf("%d ",v);
+  while(Q->front!=NULL){
+      v=Dequeue();
+      w=H->adj[v];
+      while(w){
+          if(H->visited[w->vertex]==0){
+              //printf("%d ",w->vertex);
+              virus_cnt++;
+              H->visited[w->vertex]=1;
+              Enqueue(w->vertex);
+              w=w->next;
+          }
+          else w=w->next;
+      }
+  }
+}
+void printQue(){
+    Node *horse;
+    horse=Q->head;
+    while(horse){
+        printf("%d->",horse->vertex);
+        horse=horse->next;
+    }
+}
+
 int main(){
     int m,n;
     int v1,v2;
     H=Create_Graph();
+    Q=create_Queue();
     scanf("%d %d ",&m,&n);
     for(int i=0;i<m;i++){
         addvertex(i);
@@ -108,10 +187,15 @@ int main(){
         scanf("%d %d ",&v1,&v2);
         addedge(v1,v2);
     }
-    print_graph();
+    //print_graph();
+    BFS(1);
+    printf("%d",virus_cnt);
     return 0;
 }
+
 
 #2021.03.19
 //옛날에 썼던 코드를 들고와서 쓸수도 있었지만, 그래프 만드는 감각이 익숙해지기 위해 그냥 처음부터 다 코딩했다.
 //그래프 생성, 정점 삽입, 간선 삽입, 그래프프린트 까지 만들었고 실질적인 알고리즘은 조금 이따가 다시 와서 만들겠다.
+//다 만들었고 문제에서 준 케이스는 제대로 출려되는데 문제사이트에 코드제출하면 '세그멘테이션 폴트'가 뜬다.
+//내일 100가지 넣었을때의 경우를 실험해보겠다.
