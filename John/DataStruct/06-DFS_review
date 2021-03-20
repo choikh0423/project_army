@@ -3,10 +3,11 @@
 //지금 bfs 리뷰마치고 밥먹으러가려다가 dfs도 해봐야할 거같아서 빠르게 해보고 가겠다.
 
 #start_time : 2021.03.20 12:23
-#end_time : 2021.03.20 12:32
+#end_time : 2021.03.20 12:41
 
 #배운 점
-dfs의 구현에 대해 좀 더 확실해졌다.
+//dfs의 구현에 대해 좀 더 확실해졌다.
+//23줄에 if(top==-1)pop(v)라는 중요한 코드를 빼먹었었다. 이코드가 없으면 한쪽길 깊숙히 간다음에 처음으로 돌아와서 다른길 가는 역할을 할 수 없게된다. 잊기쉬울 것 같은데 절대 잊지말자.
 
 #내코드
 void DFS(GraphList* H,int v){ //v정점부터 dfs
@@ -19,6 +20,7 @@ void DFS(GraphList* H,int v){ //v정점부터 dfs
         w=H->adj[v];
         while(w){
             if(H->visited[w->vertex]==0){
+                if(top==-1)pop(v)
                 H->visited[w->vertex]=1;
                 push(w->vertex);
                 printf("%d ",w->vertex);
