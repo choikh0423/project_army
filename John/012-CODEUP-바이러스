@@ -33,7 +33,7 @@ https://codeup.kr/upload/201304/image/virus.png
 #include<stdio.h>
 #include<stdlib.h>
 
-#define MaxVertex 100
+#define MaxVertex 101
 
 typedef struct Node{
     int vertex;
@@ -83,28 +83,26 @@ void Enqueue(int v){
         Q->rear=newNode;
         return;
     }
-    else{
-        Q->rear->next=newNode;
-        Q->rear=newNode;
+    Q->rear->next=newNode;
+    Q->rear=newNode;
+}
+
+int Dequeue(){
+    if(Q->head==NULL){
+        printf("아무것도 없슈\n");
         return;
     }
-}
-
-
-int Dequeue(){//젤앞노드것을 뺀다.
-    if(Q->front==NULL){
-        printf("아무것도 없습니다.\n");
-        return -1;
-    }
-    int value;
-    Node *old_front;
-    old_front=Q->front;
-    value=Q->front->vertex;
+    int v;
+    Node *deleteNode;
+    deleteNode=Q->front;
     Q->head=Q->head->next;
-    Q->front=Q->front->next;
-    free(old_front);
-    return value;
+    Q->front=Q->head;
+    v=deleteNode->vertex;
+    free(deleteNode);
+    return v;
 }
+
+
 void addvertex(int v){
     if(v>MaxVertex){
         printf("!overflow!\n");
@@ -200,3 +198,6 @@ int main(){
 //다 만들었고 문제에서 준 케이스는 제대로 출려되는데 문제사이트에 코드제출하면 '세그멘테이션 폴트'가 뜬다.
 //내일 100가지 넣었을때의 경우를 실험해보겠다.
 //방금 살짝해봤는데 100가지 넣었고 간선99개 일때 세그멘테이션 폴트떴다. 내일 진짜로 완성하겠다.
+
+#2021.03.20
+//최대 정점개수를 100개가 아닌 101개로 하니까 됐다 왜냐면 이 문제는 정점이 0부터 시작이 아닌 1부터 시작하므로 실제로 인덱스는 0~100까지 있어야되고 101개이다.
