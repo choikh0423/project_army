@@ -3,8 +3,28 @@
 //지금 bfs 리뷰마치고 밥먹으러가려다가 dfs도 해봐야할 거같아서 빠르게 해보고 가겠다.
 
 #start_time : 2021.03.20 12:23
-#end_time : 
+#end_time : 2021.03.20 12:32
 
 #배운 점
+dfs의 구현에 대해 좀 더 확실해졌다.
 
 #내코드
+void DFS(GraphList* H,int v){ //v정점부터 dfs
+    Node *w;
+    H->visited[v]=1;
+    push(v);
+    printf("%d ",v);
+    while(top!=-1){
+        v=pop();
+        w=H->adj[v];
+        while(w){
+            if(H->visited[w->vertex]==0){
+                H->visited[w->vertex]=1;
+                push(w->vertex);
+                printf("%d ",w->vertex);
+                w=H->adj[w->vertex];
+            }
+            else w=w->next;
+        }
+    }
+}
