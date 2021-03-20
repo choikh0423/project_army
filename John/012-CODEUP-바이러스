@@ -26,9 +26,11 @@ https://codeup.kr/upload/201304/image/virus.png
 4
 
 #start_time : 2021.03.19 12:24
-#end_time : 
+#end_time : 2021.03.20 11:00
 
 #배운 점
+//bfs의 개념과 구현, 큐의 구현에 대해 다시한번 되새길 수 있는 기회였다.
+//bfs구현할 때 좀 헷갈렸었다, 다시한번 만들어보겠다.
 
 #include<stdio.h>
 #include<stdlib.h>
