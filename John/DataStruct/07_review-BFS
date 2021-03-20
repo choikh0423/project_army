@@ -3,6 +3,28 @@
 //이거 완성해야 밥먹으러 갈 수 있음(상당히 배고픈 상태)
 
 #start_time : 2021.03.20 12:12
-#end_time : 2021.03.20 
+#end_time : 2021.03.20 12:18
+
+#배운 점
+//이제는 확실히 구현가능하다.
 
 #내 코드
+void BFS(GraphList *H,int v){//BFS
+    Node *w;
+    H->visited[v]=1;
+    Enqueue(v);
+    printf("%d ",v);
+    while(Q->front!=NULL){
+        v=Dequeue();
+        w=H->adj[v];
+        while(w){
+            if(H->visited[w->vertex]==0){
+                H->visited[w->vertex]=1;
+                Enqueue(w->vertex);
+                printf("%d ",w->vertex);
+                w=w->next;
+            }
+            else w=w->next;
+        }
+    }
+}
