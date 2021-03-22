@@ -23,39 +23,22 @@
 #배운점
 //자주 해본 느낌의 문제라서 크게 어려움은 없었지만]
 //다른사람들 코드길이를 보면 되게 짧다 어떻게 더 줄여볼까 고민해보겠다.
+//코드길이를 4분의 1로 줄였다. 가독성이 떨어지지만은 내가 생각한 제일 짧은 코드다
+//문제 정답을 맞춘 2861명중에 232등이다. 
 
 #내코드
-
 #include <stdio.h>
-#include <stdlib.h>
-
 int main(){
-    int n,sum=0;
-    int money[8]={0}; //10원 ~ 50000원
-    int i=0;
-    
-    scanf("%d ",&n);
+    int n,i,sum=0;
+    scanf("%d",&n);
     n=n/10;
-    while(n && i<8 ){
-        if(i==6){
-            money[7]=n/5;
-            money[6]=n%5;
-            break;
-        }
-        
-        if(n%10==0)i=i+2;
-        else if(n%10>=5){
-            money[i]=n%10-5;
-            money[++i]=1;
-        }
-        else money[i++]=n%10;
+    for(;i<=2;i++){
+        sum+=n%5;
+        if(n%10>=5)sum+=1;
         n=n/10;
-        if(i%2==1 && i!=7)i=i+1;
     }
-    for(i=0;i<8;i++){
-       
-        sum=sum+money[i];
-    }
+    sum+=n/5;
+    sum+=n%5;
     printf("%d",sum);
-    return 0;
+    return;
 }
