@@ -1,0 +1,138 @@
+#다익스트라 알고리즘
+//특정 한 정점에서 자신을 제외한 모든 정점까지의 최단경로를 구해주는 알고리즘.
+//흔히 인공위성 gps 소프트웨어에 가장 많이 사용됨.
+
+#start_time : 2021.03.23
+#end_time : 
+
+#배운점
+
+
+#내코드
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Max_Vertex 30
+#define vertexc 6
+#define M 999
+
+typedef struct Node{
+    int vertex;
+    int weight;
+    struct Node *next;
+}Node;
+
+
+typedef struct GraphList{
+    Node *graph[Max_Vertex];
+    int vertexCnt;
+}GraphList;
+
+GraphList *H;
+int adj_weight[vertexc][vertexc];
+
+GraphList* Create_Graph(){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=0;
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->graph[i]=NULL;
+    }
+    return Graph;
+}
+
+void addvertex(int v){
+    if(H->vertexCnt>=Max_Vertex){
+        printf("정점개수 초과입니다.\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(int v1, int v2,int w){
+    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
+        printf("없는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->weight=w;
+    newNode->next=H->graph[v1];
+    H->graph[v1]=newNode;
+    
+    Node *newNode2=(Node*)malloc(sizeof(Node));
+    newNode2->vertex=v1;
+    newNode2->weight=w;
+    newNode2->next=H->graph[v2];
+    H->graph[v2]=newNode2;
+    
+}
+
+void print_Graph(){
+    Node *horse;
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->graph[i];
+        printf("정점[%d]->",i);
+        while(horse!=NULL){
+            printf("%d(%d)-> ",horse->vertex,horse->weight);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+void set_weight(){
+    for(int i=0;i<vertexc;i++)
+        for(int j=0;j<vertexc;j++)
+            adj_weight[i][j]=M;
+}
+
+void find_weight(GraphList *H){
+    Node *horse;
+    printf("\n!가중치를 반영하였습니다.!\n\n");
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->graph[i];
+        adj_weight[i][i]=0;
+        while(horse!=NULL){
+            adj_weight[i][horse->vertex]=horse->weight;
+            horse=horse->next;
+        }
+    }
+}
+
+
+void print_weight(){
+    for(int i=0;i<vertexc;i++){
+        for(int j=0;j<vertexc;j++){
+            printf("%d ",adj_weight[i][j]);
+        }
+        printf("\n");
+    }
+}
+void dijkstra(int v){
+    
+    return;
+}
+
+int main(){
+    H=Create_Graph();
+    for(int i=0;i<vertexc;i++)addvertex(i);
+    addedge(0,3,1);
+    addedge(0,2,5);
+    addedge(0,1,2);
+    addedge(1,2,3);
+    addedge(1,3,2);
+    addedge(2,3,3);
+    addedge(2,4,1);
+    addedge(2,5,5);
+    addedge(3,4,1);
+    addedge(4,5,2);
+    print_Graph(H);
+    set_weight();
+    find_weight(H);
+    print_weight();
+    return 0;
+}
+
+#2021.03.23
+//일단은 가중치 그래프에서 각 정점별로 가르키는 가중치를 보여주는 이차원배열 adj_weight선언했다.
+//adj_weight를 초기화해주는 함수 set_weight(), 그래프에서 가중치를 찾아 삽입해주는 함수 find_weight(H), 출력해주는 함수print_weight()까지 만들었고 그후는 노트에 끄적여보고 오겠다.
