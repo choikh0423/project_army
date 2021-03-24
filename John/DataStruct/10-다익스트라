@@ -30,7 +30,8 @@ typedef struct GraphList{
 
 GraphList *H;
 int adj_weight[vertexc][vertexc];
-
+int S[vertexc]; // 트리 S에 정점 넣었는지 확인해주는 배열.
+int distance[vertexc]; // 최소거리 
 GraphList* Create_Graph(){
     GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
     Graph->vertexCnt=0;
@@ -109,7 +110,17 @@ void print_weight(){
     }
 }
 void dijkstra(int v){
-    
+    S[v]=1;
+    for(int i=0;i<vertexc;i++){
+        distance[i]=adj_weight[v][i];
+    }
+    for(int i=0;i<vertexc;i++){
+        u<-s에속하지않는 것중 제일 거리가 최소인 정정점
+        S[u]=1;
+        for(int j=0;j<vertexclj++){
+            if(S[j]==1)
+        }
+    }
     return;
 }
 
@@ -132,7 +143,9 @@ int main(){
     print_weight();
     return 0;
 }
-
 #2021.03.23
 //일단은 가중치 그래프에서 각 정점별로 가르키는 가중치를 보여주는 이차원배열 adj_weight선언했다.
 //adj_weight를 초기화해주는 함수 set_weight(), 그래프에서 가중치를 찾아 삽입해주는 함수 find_weight(H), 출력해주는 함수print_weight()까지 만들었고 그후는 노트에 끄적여보고 오겠다.
+
+#2021.03.24
+//전체적인 틀만 만들어놨고 이제 더 공부해서 만들면 될 것 같다.
