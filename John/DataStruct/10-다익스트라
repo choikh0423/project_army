@@ -3,11 +3,33 @@
 //흔히 인공위성 gps 소프트웨어에 가장 많이 사용됨.
 
 #start_time : 2021.03.23
-#end_time : 
+#end_time : 2021.03.25
 
 #배운점
+//시간없어서 26일에 후기쓰겠다!!
+//////////////////////////////////////////////////////////////////////////////
+#출력
+
+정점[0]->1(2)-> 2(5)-> 3(1)-> 
+정점[1]->3(2)-> 2(3)-> 0(2)-> 
+정점[2]->5(5)-> 4(1)-> 3(3)-> 1(3)-> 0(5)-> 
+정점[3]->4(1)-> 2(3)-> 1(2)-> 0(1)-> 
+정점[4]->5(2)-> 3(1)-> 2(1)-> 
+정점[5]->4(2)-> 2(5)-> 
+
+!가중치를 반영하였습니다.!
+
+0 2 5 1 999 999 
+2 0 3 2 999 999 
+5 3 0 3 1 5 
+1 2 3 0 1 999 
+999 999 1 1 0 2 
+999 999 5 999 2 0 
 
 
+0으로부터 최소거리
+0 2 3 1 2 4 
+//////////////////////////////////////////////////////////////////////////////
 #내코드
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +44,6 @@ typedef struct Node{
     struct Node *next;
 }Node;
 
-
 typedef struct GraphList{
     Node *graph[Max_Vertex];
     int vertexCnt;
@@ -32,6 +53,7 @@ GraphList *H;
 int adj_weight[vertexc][vertexc];
 int S[vertexc]; // 트리 S에 정점 넣었는지 확인해주는 배열.
 int distance[vertexc]; // 최소거리 
+
 GraphList* Create_Graph(){
     GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
     Graph->vertexCnt=0;
@@ -68,6 +90,64 @@ void addedge(int v1, int v2,int w){
     
 }
 
+
+void set_weight(){
+    for(int i=0;i<vertexc;i++)
+        for(int j=0;j<vertexc;j++)
+            adj_weight[i][j]=M;
+}
+
+
+
+void find_weight(GraphList *H){
+    Node *horse;
+    printf("\n!가중치를 반영하였습니다.!\n\n");
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->graph[i];
+        adj_weight[i][i]=0;
+        while(horse!=NULL){
+            adj_weight[i][horse->vertex]=horse->weight;
+            horse=horse->next;
+        }
+    }
+    print_weight();
+    printf("\n");
+}
+
+int Find_MinVertex(){
+    int min=M;
+    int index=-1;
+    for(int i=0;i<vertexc;i++){
+        if(distance[i]<min && !S[i]){ // 방문하지 않은것중에! 최소거리 정점!
+            min=distance[i];
+            index=i;
+        }
+    }
+    printf("%d ",index);
+    return index;
+}
+
+void Find_Distance(int v){
+    for(int i=0;i<vertexc;i++){
+        distance[i]=adj_weight[v][i];
+    }
+}
+void dijkstra(int v){
+    S[v]=1;
+    for(int i=0;i<vertexc-2;i++){ // 젤처음에 선택하고 시작(1) 마지막정점은 탐색할 필요없음(2) 그래서 -2
+        int current=Find_MinVertex();//v로 부터 최소거리 정점한개 선택
+        printf("%d\n",current);
+        S[current]=1;// 선택한 정점 방문
+        for(int j=0;j<vertexc;j++){ // 선택한 정점을 방문하면 바로 그 정점을 통해 갈 수있는 정점이 늘어나므로 거리를 최신화.
+            if(!S[j]){ // 방문안한정점을 탐색
+                if(distance[current]+adj_weight[current][j]<distance[j]){
+                    distance[j]=distance[current]+adj_weight[current][j];
+                }
+            }
+        }//이 과정을 거쳤다면 저절로 다음 Find_MinVertex()에서 최소정점을 잘 선택할 것이다.
+    }
+}
+
 void print_Graph(){
     Node *horse;
     for(int i=0;i<H->vertexCnt;i++){
@@ -81,25 +161,6 @@ void print_Graph(){
     }
     return;
 }
-void set_weight(){
-    for(int i=0;i<vertexc;i++)
-        for(int j=0;j<vertexc;j++)
-            adj_weight[i][j]=M;
-}
-
-void find_weight(GraphList *H){
-    Node *horse;
-    printf("\n!가중치를 반영하였습니다.!\n\n");
-    for(int i=0;i<H->vertexCnt;i++){
-        horse=H->graph[i];
-        adj_weight[i][i]=0;
-        while(horse!=NULL){
-            adj_weight[i][horse->vertex]=horse->weight;
-            horse=horse->next;
-        }
-    }
-}
-
 
 void print_weight(){
     for(int i=0;i<vertexc;i++){
@@ -109,25 +170,18 @@ void print_weight(){
         printf("\n");
     }
 }
-void dijkstra(int v){
-    S[v]=1;
+
+void print_MinDistance(){
     for(int i=0;i<vertexc;i++){
-        distance[i]=adj_weight[v][i];
+        printf("%d ",distance[i]);   
     }
-    for(int i=0;i<vertexc;i++){
-        u<-s에속하지않는 것중 제일 거리가 최소인 정정점
-        S[u]=1;
-        for(int j=0;j<vertexclj++){
-            if(S[j]==1)
-        }
-    }
-    return;
+    printf("\n");
 }
 
 int main(){
-    H=Create_Graph();
-    for(int i=0;i<vertexc;i++)addvertex(i);
-    addedge(0,3,1);
+    H=Create_Graph(); // 그래프 메모리할당
+    for(int i=0;i<vertexc;i++)addvertex(i); // 0부터 5까지 정점추가
+    addedge(0,3,1); // 간선추가 addedge(정점1, 정점2, 두정점간의 거리)
     addedge(0,2,5);
     addedge(0,1,2);
     addedge(1,2,3);
@@ -137,15 +191,25 @@ int main(){
     addedge(2,5,5);
     addedge(3,4,1);
     addedge(4,5,2);
-    print_Graph(H);
-    set_weight();
-    find_weight(H);
-    print_weight();
+    print_Graph(H); // 그래프 출력
+    set_weight(); // 이차원배열adj_weight에 가중치 초기화(999)
+    find_weight(H); // adj_weight[][]에 H라는 그래프의 가중치를 삽입 
+    Find_Distance(0); // 0을 기준으로 최소거리 distance[]에 0의 인접정점 가중치를 삽입
+    dijkstra(0); // 0을 기준으로 최소거리를 구하는 알고리즘
+    print_MinDistance(); // 최소거리 출력
     return 0;
 }
+//////////////////////////////////////////////////////////////////////////////
+
 #2021.03.23
 //일단은 가중치 그래프에서 각 정점별로 가르키는 가중치를 보여주는 이차원배열 adj_weight선언했다.
 //adj_weight를 초기화해주는 함수 set_weight(), 그래프에서 가중치를 찾아 삽입해주는 함수 find_weight(H), 출력해주는 함수print_weight()까지 만들었고 그후는 노트에 끄적여보고 오겠다.
 
 #2021.03.24
 //전체적인 틀만 만들어놨고 이제 더 공부해서 만들면 될 것 같다.
+
+#2021.03.25
+//유튜브강의 보면서 이해를 했다.
+//지금 이해하면서 만들었지만 나중에 되면 분명 다시 생각안날것같다.
+//꼭 다시 만들어봐야겠다.
+//시간없어서 내일 후기쓰겠다.
