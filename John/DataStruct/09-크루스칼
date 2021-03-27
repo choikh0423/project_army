@@ -1,13 +1,358 @@
 #크루스칼 알고리즘
 //크루스칼 알고리즘이란 가중치그래프에서 최소신장트리를 찾는 알고리즘이다.
+//가중치 그래프에서 정점두개와 정점간의 가중치를 가지는 노드를 내림차순or오름차순으로 정렬하는 리스트를 생성한다.
+//리스트에서 가중치가 작은 것 부터 차례로 하나씩 새로운 그래프에 추가해준다.(단, 순환이 생길경우 추가하면 안된다)
+//간선의 개수가 n-1이 되면 함수를 종료한다.(이유는, 최소신장트리의 간선의 개수는 정점의 합-1 이기때문이다)
 
 #start_time : 2021.03.21
-#end_time :
+#end_time : 2021.03.27
 
 #배운 점
+//만들면서 항상 같은 코드를 칠 수 없기에 예전에 쓰던 것을 가져오고 그랬다. 그러면서 생긴 문제점은 호환이다. 
+//어디에서는 다음노드를 가르키는 포인터로 link를 쓰고 어디서는 next를 쓰고하다보니까 끌어올때 한가지로 맞춰주는데 시간이 조금 걸린다.
+//크루스칼 알고리즘은 내가 배운문제집에 코드가 없었는데 없을만한 이유를 알것도같다.
+//일단, 추가로 필요한 함수가 많다. 가중치리스트만드는함수, 유니온함수 등 이것들도 알려주기에는 책도 귀찮았나보다.
+//뿌듯했던점은 인터넷의 다른 사람들은 만들 때 가중치자체를 입력해주고 시작한다. 하지만 나는 어떤 가중치그래프를 들고와도 바로 가동할 수있도록 구현하였다.
+//요즘 그래프를 배우면 배울수록 드는 생각은 c++을 하고싶다는 생각이든다 c++은 라이브러리에서 바로 스택, 큐 등등 쓸 수 있는걸로아는데 편리할 것 같다.
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#출력
+그래프를 출력합니다
+정점[0]->1(2)-> 2(5)-> 3(1)-> 
+정점[1]->3(2)-> 2(3)-> 0(2)-> 
+정점[2]->5(5)-> 4(1)-> 3(3)-> 1(3)-> 0(5)-> 
+정점[3]->4(1)-> 2(3)-> 1(2)-> 0(1)-> 
+정점[4]->5(2)-> 3(1)-> 2(1)-> 
+정점[5]->4(2)-> 2(5)-> 
+
+!가중치를 반영하였습니다.!
+
+
+----------------------------
+가중치 인접배열을 출력합니다.
+  0   2   5   1 999 999 
+  2   0   3   2 999 999 
+  5   3   0   3   1   5 
+  1   2   3   0   1 999 
+999 999   1   1   0   2 
+999 999   5 999   2   0 
+----------------------------
+올림차순 가중치 리스트 출력합니다.
+[0][3] = 1
+[2][4] = 1
+[3][4] = 1
+[0][1] = 2
+[1][3] = 2
+[4][5] = 2
+[1][2] = 3
+[2][3] = 3
+[0][2] = 5
+[2][5] = 5
+----------------------------
+크루스칼 알고리즘으로 최소신장트리를 생성합니다.
+싸이클이 생성되므로 제한합니다.(1 - 3)
+----------------------------
+그래프를 출력합니다
+정점[0]->1(2)-> 3(1)-> 
+정점[1]->0(2)-> 
+정점[2]->4(1)-> 
+정점[3]->4(1)-> 0(1)-> 
+정점[4]->5(2)-> 3(1)-> 2(1)-> 
+정점[5]->4(2)-> 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #내 코드
+#include <stdio.h>
+#include <stdlib.h>
 
+#define Max_Vertex 30
+#define vertexc 6
+#define M 999
+
+typedef struct Node{
+    int vertex;
+    int weight;
+    struct Node *next;
+}Node;
+
+typedef struct GraphList{
+    Node *adj[Max_Vertex];
+    int parent[Max_Vertex];
+    int vertexCnt;
+    int visited[Max_Vertex];
+}GraphList;
+
+typedef struct WeightNode{
+    int weight;
+    int v1,v2;
+    struct WeightNode* next;
+}WeightNode;
+
+typedef struct WeightList{
+    WeightNode *H;
+    int EdgeCnt;
+}WeightList;
+
+typedef struct Que{
+    Node *head;
+    Node *front;
+    Node *rear;
+}Que;
+
+Que *Q=NULL;
+GraphList *H=NULL;
+WeightList *W=NULL;
+int adj_weight[vertexc][vertexc];
+int S[vertexc]; // 트리 S에 정점 넣었는지 확인해주는 배열.
+int distance[vertexc]; // 최소거리 
+
+Node* create_node(int value){ //노드 생성
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=value;
+    newNode->next=NULL;
+    return newNode;
+}
+
+void Enqueue(int value){//젤 뒤 노드에 붙여준다.
+    Node *newNode=create_node(value);
+    if(Q->front==NULL){
+        Q->head=newNode;
+        Q->front=newNode;
+        Q->rear=newNode;
+        return;
+    }
+    else{
+        Q->rear->next=newNode;
+        Q->rear=newNode;
+        return;
+    }
+}
+int Dequeue(){//젤앞노드것을 뺀다.
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    int value;
+    Node *old_front;
+    old_front=Q->front;
+    value=Q->front->vertex;
+    Q->head=Q->head->next;
+    Q->front=Q->front->next;
+    free(old_front);
+    return value;
+}
+
+GraphList* Create_Graph(){
+    GraphList* Graph=(GraphList*)malloc(sizeof(GraphList));
+    Graph->vertexCnt=0;
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->parent[i]=i;
+    }
+    for(int i=0;i<Max_Vertex;i++){
+        Graph->adj[i]=NULL;
+    }
+    return Graph;
+}
+
+void addvertex(int v){
+    if(H->vertexCnt>=Max_Vertex){
+        printf("정점개수 초과입니다.\n");
+        return;
+    }
+    H->vertexCnt++;
+}
+
+void addedge(int v1, int v2,int w){
+    if(v1>=H->vertexCnt || v2>=H->vertexCnt){
+        printf("없는 정점입니다.\n");
+        return;
+    }
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->vertex=v2;
+    newNode->weight=w;
+    newNode->next=H->adj[v1];
+    H->adj[v1]=newNode;
+    
+    Node *newNode2=(Node*)malloc(sizeof(Node));
+    newNode2->vertex=v1;
+    newNode2->weight=w;
+    newNode2->next=H->adj[v2];
+    H->adj[v2]=newNode2;
+    
+}
+
+void set_weight(){
+    for(int i=0;i<vertexc;i++)
+        for(int j=0;j<vertexc;j++)
+            adj_weight[i][j]=M;
+}
+
+void print_weight(){
+    printf("가중치 인접배열을 출력합니다.\n");
+    for(int i=0;i<vertexc;i++){
+        for(int j=0;j<vertexc;j++){
+            printf("%3d ",adj_weight[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void find_weight(GraphList *H){
+    Node *horse;
+    printf("\n!가중치를 반영하였습니다.!\n\n");
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->adj[i];
+        adj_weight[i][i]=0;
+        while(horse!=NULL){
+            adj_weight[i][horse->vertex]=horse->weight;
+            horse=horse->next;
+        }
+    }
+    printf("\n");
+}
+
+void print_Graph(GraphList *H){
+    Node *horse;
+    for(int i=0;i<H->vertexCnt;i++){
+        horse=H->adj[i];
+        printf("정점[%d]->",i);
+        while(horse!=NULL){
+            printf("%d(%d)-> ",horse->vertex,horse->weight);
+            horse=horse->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+
+void Sort_Weight(int v1,int v2){
+    WeightNode* newNode=(WeightNode*)malloc(sizeof(WeightNode));
+    newNode->v1=v1;
+    newNode->v2=v2;
+    //printf("adj[%d][%d] = %d\n",v1,v2,adj_weight[v1][v2]);
+    newNode->weight=adj_weight[v1][v2];
+    newNode->next=NULL;
+    if(W->H==NULL){
+        W->H=newNode;
+        return;
+    }
+    WeightNode* p;
+    p=W->H;
+    if(newNode->weight<W->H->weight){
+        newNode->next=W->H;
+        W->H=newNode;
+        return;
+    }
+    while(p->next!=NULL){
+        if(newNode->weight<p->next->weight){
+            break;
+        }
+        p=p->next;
+    }
+    newNode->next=p->next;
+    p->next=newNode;
+    return;
+}
+
+int Find(GraphList *H,int v){
+    //printf("%d %d\n",v,H->parent[v]);
+    if(v==H->parent[v])return H->parent[v];
+    else{
+        //printf("다름\n");
+        return H->parent[v]=Find(H,H->parent[v]);
+    }
+}
+
+void Union_(GraphList *H,int v1,int v2,int w){
+    if(Find(H,v1)!=Find(H,v2)){
+        H->vertexCnt++;
+        
+        Node* newNode=(Node*)malloc(sizeof(Node));
+        newNode->vertex=v2;
+        newNode->weight=w;
+        newNode->next=H->adj[v1];
+        H->adj[v1]=newNode;
+    
+        Node* newNode2=(Node*)malloc(sizeof(Node));
+        newNode2->vertex=v1;
+        newNode2->weight=w;
+        newNode2->next=H->adj[v2];
+        H->adj[v2]=newNode2;
+        
+        if(v1<v2){
+            H->parent[v2]=H->parent[v1];
+        }
+        else H->parent[v1]=H->parent[v2];
+        return;
+    }
+    else{
+        printf("싸이클이 생성되므로 제한합니다.(%d - %d)\n",v1,v2);
+        return;
+    }
+}
+
+void print_weightList(){
+    printf("올림차순 가중치 리스트 출력합니다.\n");
+    WeightNode* horse;
+    horse=W->H;
+    while(horse){
+        printf("[%d][%d] = %d\n",horse->v1,horse->v2,horse->weight);
+        horse=horse->next;
+    }
+}
+
+void Cruskal(GraphList *T,WeightList *W){
+    printf("크루스칼 알고리즘으로 최소신장트리를 생성합니다.\n");
+    WeightNode *horse;
+    horse=W->H;
+    T->vertexCnt++;
+    while(horse){
+        if(T->vertexCnt<=vertexc-1){
+            Union_(T,horse->v1,horse->v2,horse->weight);
+        }
+        horse=horse->next;
+    }
+    
+}
+
+int main(){
+    H=Create_Graph(); // 그래프 메모리할당
+    GraphList* MinTree;
+    MinTree=Create_Graph();
+    W=(WeightList *)malloc(sizeof(WeightList));
+    Q=(Que*)malloc(sizeof(Que));
+    for(int i=0;i<vertexc;i++)addvertex(i); // 0부터 5까지 정점추가
+    addedge(0,3,1); // 간선추가 addedge(정점1, 정점2, 두정점간의 거리)
+    addedge(0,2,5);
+    addedge(0,1,2);
+    addedge(1,2,3);
+    addedge(1,3,2);
+    addedge(2,3,3);
+    addedge(2,4,1);
+    addedge(2,5,5);
+    addedge(3,4,1);
+    addedge(4,5,2);
+    print_Graph(H); // 그래프 출력
+    set_weight(); // 이차원배열adj_weight에 가중치 초기화(999)
+    find_weight(H); // adj_weight[][]에 H라는 그래프의 가중치를 삽입 
+    for(int i=0;i<vertexc;i++){
+        for(int j=i+1;j<vertexc;j++){
+            if(adj_weight[i][j]!=M)Sort_Weight(i,j);
+        }
+    }
+    printf("----------------------------\n");
+    print_weight();
+    printf("----------------------------\n");
+    print_weightList(); // 가중치 리스트 출력
+    printf("----------------------------\n");
+    Cruskal(MinTree,W);
+    printf("----------------------------\n");
+    print_Graph(MinTree);
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #2021.03.21
 //x
@@ -22,3 +367,5 @@
 //이 이차원 배열을 하나씩 탐색하면서 가중치무한을 제외하고 다 가중치리스트에 넣는다. 단, 반사관계이므로 다 반만 탐색하면된다.
 //가중치 리스트에는 저장되는 노드의 정보는 정점v1,v2 정점간의 가중치w가 있다.
 //이제 이 가중치 리스트로 최소값부터 union_find 함수를 사용하면서 순환이 안생기는 선에서 트리르 만들어준다.
+//완성!!
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
