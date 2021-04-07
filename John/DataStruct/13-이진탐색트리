@@ -1,0 +1,66 @@
+#start_time : 2021.04.07
+#ned_time :
+
+#이진탐색트리란?
+//왼쪽자식노드는 부모노드보다 작고, 오른쪽자식노드는 부모노드보다 큰 구조를 가지고 있는 트리
+//이진탐색트리에서 어떤 수를 탐색할 때 찾기 유용하며 대소를 나뉘며 탐색해야하는 노드를 계속 반으로 줄여주기때문에
+//탐색 시 시간복잡도는 O(logN)이다.
+
+#내코드
+#include <stdio.h>
+
+typedef struct Node{
+    int data;
+    struct Node* left;
+    struct Node* right;
+}Node;
+
+typedef struct BST{
+    Node *h;
+}BST;
+
+Node* Create_Node(int data){
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->data=data;
+    newNode->left=NULL;
+    newNode->right=NULL;
+    return newNode;
+}
+
+void BST_Insert(BST H, int num){
+    Node *p;
+    Node *q;
+    Node *newNode=Create_Node(num);
+    if(H==NULL){
+        H->h=newNode;
+        return ;
+    }
+    p=H->h;
+    while(p){
+        if(num==p->data)return;
+        q=p;
+        if(num < p->data){
+            p=p->left;
+        }
+        else p=p->right;
+    }
+    if(num<q->data){
+        q->left=newNode;
+    }
+    else q->right=newNode;
+}
+
+void Print_Tree(BST H){
+    
+}
+
+int main(){
+    BST *bstree=(BST*)malloc(sizeof(BST));
+    BST_Insert(bstree,10);
+    BST_Insert(bstree,5);
+    BST_Insert(bstree,17);
+    BST_Insert(bstree,14);
+    BST_Insert(bstree,6);
+    BST_Insert(bstree,1);
+    BST_Insert(bstree,21);
+}
