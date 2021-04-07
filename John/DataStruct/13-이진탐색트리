@@ -64,3 +64,7 @@ int main(){
     BST_Insert(bstree,1);
     BST_Insert(bstree,21);
 }
+
+#2021.04.07
+//이진탐색트리 노드추가까지만 구현했다
+//요즘 csacademy 가 컴파일도, 런도 잘안먹혀서 Replit로 옮겼는데 적응하려면 좀 걸릴거같다.
