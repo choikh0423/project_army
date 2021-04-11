@@ -1,13 +1,19 @@
 #start_time : 2021.04.07
 #ned_time :
-
+----------------------------------------------------------------------------------------------------------------------------------------
 #이진탐색트리란?
 //왼쪽자식노드는 부모노드보다 작고, 오른쪽자식노드는 부모노드보다 큰 구조를 가지고 있는 트리
 //이진탐색트리에서 어떤 수를 탐색할 때 찾기 유용하며 대소를 나뉘며 탐색해야하는 노드를 계속 반으로 줄여주기때문에
 //탐색 시 시간복잡도는 O(logN)이다.
-
+----------------------------------------------------------------------------------------------------------------------------------------
+#출력
+10
+5 17 
+1 6 14 21
+----------------------------------------------------------------------------------------------------------------------------------------
 #내코드
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct Node{
     int data;
@@ -15,11 +21,24 @@ typedef struct Node{
     struct Node* right;
 }Node;
 
+typedef struct node{
+  Node *link;
+  struct node* next;
+}node;
+
 typedef struct BST{
     Node *h;
 }BST;
 
-Node* Create_Node(int data){
+typedef struct Que{
+    node *head;
+    node *front;
+    node *rear;
+}Que;
+
+Que *Q=NULL;
+
+Node* Create_Node(int data){ // 트리용
     Node *newNode=(Node*)malloc(sizeof(Node));
     newNode->data=data;
     newNode->left=NULL;
@@ -27,11 +46,58 @@ Node* Create_Node(int data){
     return newNode;
 }
 
-void BST_Insert(BST H, int num){
+node* create_node(Node* link){ //큐용
+    node *newNode=(node*)malloc(sizeof(node));
+    newNode->link=link;
+    newNode->next=NULL;
+    return newNode;
+}
+
+void Enqueue(Node *link){//젤 뒤 노드에 붙여준다.
+    node *newNode=create_node(link);
+   
+    if(Q->front==NULL){
+        Q->head=newNode;
+        Q->front=newNode;
+        Q->rear=newNode;
+        return;
+    }
+    else{
+        Q->rear->next=newNode;
+        Q->rear=newNode;
+        return;
+    }
+}
+
+
+Node* Dequeue(){//젤앞노드것을 뺀다.
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+        return NULL;
+    }
+    Node* value;
+    node *old_front;
+    old_front=Q->front;
+    value=Q->front->link;
+    Q->head=Q->head->next;
+    Q->front=Q->front->next;
+    free(old_front);
+    if(Q->front==NULL)Q->rear=NULL;
+    return value;
+}
+
+int peak(){//젤 앞의 값을 보여줌
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+    }
+    return Q->front->link->data;
+}
+
+void BST_Insert(BST *H, int num){
     Node *p;
     Node *q;
     Node *newNode=Create_Node(num);
-    if(H==NULL){
+    if(H->h==NULL){
         H->h=newNode;
         return ;
     }
@@ -50,11 +116,59 @@ void BST_Insert(BST H, int num){
     else q->right=newNode;
 }
 
-void Print_Tree(BST H){
-    
+void BST_Delete(BST *H, int num){
+  Node *p;
+  Node *q;
+  p=H->h;
+  if(num==H->h->data){ // 루트노드를 삭제할 때
+    p=p->left;
+    if(p->right==NULL)
+    while(p->right->right!=NULL){
+      p=p->right;
+    }
+    free(p->right);
+   }
+}
+
+void inorder(Node* node){
+    if(node){
+        inorder(node->left);
+        printf("%d -> ",node->data);
+        inorder(node->right);
+    }
+}
+
+
+
+void BFS_TREE(BST *H){//BFS
+  int i=1,j=2;
+  Node *w;
+  Node *v;
+  v=H->h;
+  Enqueue(v);
+  printf("%d\n",v->data);
+  while(Q->front!=NULL){
+    v=Dequeue();
+    if(v->left!=NULL){
+      Enqueue(v->left);
+      printf("%d ",v->left->data);
+      i++;
+      }
+    if(v->right!=NULL){
+      Enqueue(v->right);
+      printf("%d ",v->right->data);
+      i++;
+      }
+    if(i+1==j*2){
+      printf("\n");
+      j=i+1;
+    }
+  }
 }
 
 int main(){
+    Q=(Que*)malloc(sizeof(Que));
+    printf("헬로\n");
     BST *bstree=(BST*)malloc(sizeof(BST));
     BST_Insert(bstree,10);
     BST_Insert(bstree,5);
@@ -63,7 +177,11 @@ int main(){
     BST_Insert(bstree,6);
     BST_Insert(bstree,1);
     BST_Insert(bstree,21);
+    //inorder(bstree->h);
+    printf("\n");
+    BFS_TREE(bstree);
 }
+----------------------------------------------------------------------------------------------------------------------------------------
 
 #2021.04.07
 //이진탐색트리 노드추가까지만 구현했다
@@ -72,3 +190,8 @@ int main(){
 #2021.04.08
 //이진탐색트리를 어떻게 높이별로(1층, 2층, 3층) 깔끔하게 순회하면서 출력할 수 있을까 고민했는데 이전에 배운 BFS가 딱 어울린다는 걸 생각해냈다.
 //이진탐색트리의 출력은 BFS기법으로 출력함수를 만들어봐야겠다.
+
+#2021.04.11
+//이진탐색트리를 높이별로 순회하는 함수(BFS)를만들었다.
+//쉬울줄알았는데 생각보다 쉽지않았다.
+//이제 탐색하는 알고리즘을 만들어야겠다.(중점은 이건데 부가적인거를 만들려는 것들이 시간을 더많이쓴다.)
