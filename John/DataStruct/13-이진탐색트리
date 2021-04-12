@@ -5,13 +5,41 @@
 //왼쪽자식노드는 부모노드보다 작고, 오른쪽자식노드는 부모노드보다 큰 구조를 가지고 있는 트리
 //이진탐색트리에서 어떤 수를 탐색할 때 찾기 유용하며 대소를 나뉘며 탐색해야하는 노드를 계속 반으로 줄여주기때문에
 //탐색 시 시간복잡도는 O(logN)이다.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+#배운점
+//이진탐색트리에 관한 원리와 구현에 대해배웠다.
+//이진탐색트리에 필요한 함수는 insert,delete,find 이 3개가 필수요소이다.
+//find함수가 제일 만들기 쉬웠고 insert도 그렇게 어렵지않았지만 delete같은경우는 경우의수가 좀 많아서 다 생각하는데 시간이 좀걸렸다.
+//delete 함수 만든 거 아마 더 깔끔하게 중복많
 ----------------------------------------------------------------------------------------------------------------------------------------
 #출력
+<트리출력>
 10
 5 17 
-1 6 14 21
+1 7 14 21 
+6 이진탐색트리에서 10 탐색
+트리에서 '10' 탐색중...
+1번째 탐색후 찾았음. 
+
+<17 삭제>
+<트리출력>
+10
+5 14 
+1 7 21 6 
+
+<14 삭제>
+<트리출력>
+10
+5 21 
+1 7 6 
+
+<10 삭제>
+<트리출력>
+7
+5 21 
+1 6
 ----------------------------------------------------------------------------------------------------------------------------------------
-#내코드
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -116,19 +144,6 @@ void BST_Insert(BST *H, int num){
     else q->right=newNode;
 }
 
-void BST_Delete(BST *H, int num){
-  Node *p;
-  Node *q;
-  p=H->h;
-  if(num==H->h->data){ // 루트노드를 삭제할 때
-    p=p->left;
-    if(p->right==NULL)
-    while(p->right->right!=NULL){
-      p=p->right;
-    }
-    free(p->right);
-   }
-}
 
 void inorder(Node* node){
     if(node){
@@ -141,6 +156,7 @@ void inorder(Node* node){
 
 
 void BFS_TREE(BST *H){//BFS
+  printf("<트리출력>\n");
   int i=1,j=2;
   Node *w;
   Node *v;
@@ -166,21 +182,127 @@ void BFS_TREE(BST *H){//BFS
   }
 }
 
+Node* BST_Find(BST *H, int data){
+  printf("트리에서 '%d' 탐색중...\n");
+  Node *horse;
+  horse=H->h;
+  int i=0;
+  while(horse!=NULL){
+    i++;
+    if(horse->data==data){
+      printf("%d번째 탐색후 찾았음. \n",i);
+      return horse;
+    }
+    if(data<horse->data)horse=horse->left;
+    else horse=horse->right;
+  }
+  printf("없음\n");
+  return NULL;
+}
+
+void BST_delete(BST *H, int data){
+  Node *parent=H->h;
+  Node *p=H->h;
+  Node *horse=H->h;
+  if(data==H->h->data){ // 삭제할 노드가 루트노드일경우
+    parent=p;
+    p=p->left;
+    while(p->right!=NULL){
+      parent=p;
+      p=p->right;
+    }
+    Node *newNode=Create_Node(p->data);
+    newNode->left=H->h->left;
+    newNode->right=H->h->right;
+    BST_delete(H,p->data);
+    horse=H->h;
+    H->h=newNode;
+    free(horse);
+    return;
+  }
+  while(p!=NULL){ //삭제할노드의 위치와 그의 부모노드의위치를 찾기.
+    if(p->data==data){
+      break;
+    }
+    if(data < p->data){
+      parent=p;
+      p=p->left;
+      }
+    else{
+      parent=p;
+      p=p->right;
+    }
+  }
+  if(p->left!=NULL && p->right!=NULL) {// 삭제할 노드의 자식이 두개일때
+    if(parent->left->data==p->data){//삭제할 노드가 부모의 왼쪽일경우
+      p->left->right=p->right; // 삭제할 노드의 왼쪽자식이 부모가 되고 오른쪽자식이 그 자식의 오른쪽 자식이 될거기때문.
+      parent->left=p->left;
+      free(p);
+    }
+    else{ //삭제할 노드가 부모의 오른쪽일경우
+      p->left->right=p->right;
+      parent->right=p->left;
+      free(p);
+    }
+  }
+  else if(p->left!=NULL || p->right!=NULL){ //삭제할 노드가 자식노드가 하나일경우exclusive OR(이유는 위에서 AND를 이미했으므로)
+    if(parent->left->data == p->data){ //삭제할 노드가 부모의 왼쪽일경우
+      if(p->left!=NULL){ // 삭제할 노드의 왼쪽에 자식노드가있을경우
+        parent->left=p->left;
+        free(p);
+      }
+      else{ // 삭제할 노드의 오른쪽에 자식노드가 있을경우
+        parent->left=p->right;
+      }
+    }
+    else{ // 삭제할 노드가 부모의 오른쪽일경우
+      if(p->left!=NULL){// 삭제할 노드의 왼쪽에 자식노드가 있을경우
+        parent->right=p->left;
+        free(p);
+      }
+      else{// 삭제할 노드의 오른쪽에 자식노드가 있을경우
+        parent->right=p->right;
+      }
+    }
+  }
+  else{ // 삭제할 노드가 자식노드가 하나도없을 경우
+    if(parent->left->data == data){
+      parent->left=NULL;
+    }
+    else{
+      parent->right=NULL;
+    }
+  }
+  
+  //printf("없음\n");
+}
+
 int main(){
     Q=(Que*)malloc(sizeof(Que));
-    printf("헬로\n");
     BST *bstree=(BST*)malloc(sizeof(BST));
     BST_Insert(bstree,10);
     BST_Insert(bstree,5);
     BST_Insert(bstree,17);
     BST_Insert(bstree,14);
-    BST_Insert(bstree,6);
+    BST_Insert(bstree,7);
     BST_Insert(bstree,1);
     BST_Insert(bstree,21);
+    BST_Insert(bstree,6);
     //inorder(bstree->h);
+  
+    BFS_TREE(bstree);
+    printf("이진탐색트리에서 10 탐색\n");
+    BST_Find(bstree,10);
+    printf("\n<17 삭제>\n");
+    BST_delete(bstree,17);//자식 두개인 노드 삭제
+    BFS_TREE(bstree);
+    printf("\n<14 삭제>\n");
+    BST_delete(bstree,14);//자식 한개인 노드 삭제
+    BFS_TREE(bstree);
+    printf("\n\n<10 삭제>");
+    BST_delete(bstree,10);//루트노드 삭제
     printf("\n");
     BFS_TREE(bstree);
-}
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 #2021.04.07
@@ -195,3 +317,7 @@ int main(){
 //이진탐색트리를 높이별로 순회하는 함수(BFS)를만들었다.
 //쉬울줄알았는데 생각보다 쉽지않았다.
 //이제 탐색하는 알고리즘을 만들어야겠다.(중점은 이건데 부가적인거를 만들려는 것들이 시간을 더많이쓴다.)
+
+#2021.04.12
+//이진탐색트리에서 숫자탐색하는 함수만들었다
+//숫자 삭제하는 것도 만들었다.
