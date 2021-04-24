@@ -80,23 +80,31 @@ int main(void) {
   int cnt=0;
   scanf("%d %d ",&Max, &N);
   Input(Max);
-  Print_List(Max);
+  //Print_List(Max);
   node *p, *old_p;
   p=List->head->next->next;
  // old_p=p;
-  printf("<%d ",p->data);
+  printf("<%d, ",p->data);
+  p->next->back=p->back;
   p->back->next=p->next;
   p=p->next->next->next;
   //free(old_p);
   for(int i=1;i<Max-1;i++){
-    printf("%d ",p->data);
+    printf("%d, ",p->data);
+    p->next->back=p->back;
     p->back->next=p->next;
     p=p->next->next->next;
+    
   }
   printf("%d>",p->data);
   return 0;
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 #2021.04.23
+#시도1 (실패)
 //삽입삭제가 유용한 원형연결리스트를 쓰면 될것 같다.
 //다 만들었는데 <3, 6, 2, 7, 5, 1, 4>가 아니라 3,6,2,7,5,4,4 가 출력됐다 생각해보고 다시와서하겠다.
+
+#시도2
+//양방향 원형 연결리스트를 만들었었고, 노드가 하나 삭제되면 뒤에노드가 다음노드를가르키는 포인터도 수정해야했는데 수정을 안했었다
+//고쳤다.
