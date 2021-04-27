@@ -38,6 +38,108 @@
 #배운점
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #내코드
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct Node{
+    int value;
+    struct Node *next;
+}Node;
+
+typedef struct Que{
+    Node *front;
+    Node *rear;
+}Que;
+
+
+
+Que *Q=NULL;
+int *data;
+int prior[10];
+int cnt=0;
+
+Node* create_node(int value){ //노드 생성
+    Node *newNode=(Node*)malloc(sizeof(Node));
+    newNode->value=value;
+    newNode->next=NULL;
+    return newNode;
+}
+
+void Enqueue(int value){//젤 뒤 노드에 붙여준다.
+    Node *newNode=create_node(value);
+    if(Q->front==NULL){
+        Q->front=newNode;
+        Q->rear=newNode;
+        return;
+    }
+    else{
+        Q->rear->next=newNode;
+        Q->rear=newNode;
+        return;
+    }
+}
+int Dequeue(){//젤앞노드것을 뺀다.
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+        return -1;
+    }
+    int value;
+    Node *old_front;
+    old_front=Q->front;
+    for(int i=data[Q->front->value]+1;i<=9;i++){
+        if(prior[i]>0){
+           // printf("더 중요한 문서가있습니다.\n");
+            Q->rear->next=Q->front;
+            Q->rear=Q->front;
+            Q->front=Q->front->next;
+            Q->rear->next=NULL;
+            return -1;
+        }
+    }
+    value=Q->front->value;
+    Q->front=Q->front->next;
+    free(old_front);
+    //printf("%d %d %d ",value,data[value],prior[data[value]]);
+    prior[data[value]]--;
+    cnt++;
+    return value;
+}
+
+int peak(){//젤 앞의 값을 보여줌
+    if(Q->front==NULL){
+        printf("아무것도 없습니다.\n");
+    }
+    return Q->front->value;
+}
+
+int main(){
+    int N,M,L;
+    scanf("%d ",&N);
+    for(int a=0;a<N;a++){
+        Q=(Que*)malloc(sizeof(Que));
+        scanf("%d %d ",&M,&L);
+        data=(int*)malloc(sizeof(int)*M);
+        for(int i=0;i<10;i++){
+            prior[i]=0;
+        }
+        
+        
+        for(int i=0;i<M;i++){
+            scanf("%d ",&data[i]);
+            prior[data[i]]++;
+            Enqueue(i);
+        }
+        //printf("%d",peak());
+        //printf("%d",prior[5]);
+        while(Q->front!=NULL){
+            if(Dequeue()==L){
+                printf("%d",cnt);
+                break;
+            }
+        }
+    }
+    return ;
+}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #2021.04.27
 //처음에 배열로 큐를 만들어서 해결할려고했다.
@@ -45,3 +147,4 @@
 //그래서 연결리스트 큐로 만들겠다.
 //일단 수를 입력받을 때 중요도 배열 prior[]이라는 곳에 1~9까지 중요도가 몇개씩 중첩되가는지 체크해둔다.
 //그 후 Deque할때 그 데이터의 중요도+1인덱스 부터 9까지 1이상이 있다면 높은중요도가 있는 것이기때문에 출력하지못하고 밀릴것이다.
+//테스트케이스가 1개일때는 정상적으로 작동되는데 여러개일때는 잘안된다, 시간없어서 다음에와서 고치겠다.
