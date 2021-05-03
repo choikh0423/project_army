@@ -37,8 +37,102 @@
 #end_time : 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #배운점
+//최소힙 배우고 나서 다시 복습하는 시간을 가졌다.
+//조건문 쓸때 앞에조건이 있기 때문에 뒤에조건에 조건이 생략가능해졌으면 꼭 else if 쓰자.
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #내코드
+#include <stdio.h>
+#include <stdlib.h>
+
+int *heap;
+int Index=0;
+int N;
+int cmp_Index=0;
+
+void swap(int a,int b){
+  int temp;
+  temp=heap[b];
+  heap[b]=heap[a];
+  heap[a]=temp;
+}
+
+void insert(int data){
+  if(Index>=N){
+    printf("가득참\n");
+    return;
+  }
+  heap[++Index]=data;
+  cmp_Index=Index;
+  while(1){
+    if((cmp_Index/2)>=1 && heap[cmp_Index]<heap[cmp_Index/2]){
+    
+      swap(cmp_Index,cmp_Index/2);
+      cmp_Index/=2;
+    }
+    else break; // 더크면 반복문 중지
+  }
+  cmp_Index=0;
+}
+
+int Delete(){
+  if(Index<=0){
+    return 0;
+  }
+  int data=heap[1];
+  heap[1]=heap[Index];
+  heap[Index--]=0;
+  cmp_Index=1;
+  int tempindex, tempdata;
+  while(1){
+    if(cmp_Index*2+1<=Index && heap[cmp_Index*2+1]!=0){ // 오른쪽 자식이 0이아니면 자식이 두개라는 것
+      if(heap[cmp_Index*2]<heap[cmp_Index*2+1]){
+        tempdata=heap[cmp_Index*2];
+        tempindex=cmp_Index*2;
+      }
+      else{
+        tempdata=heap[cmp_Index*2+1];
+        tempindex=cmp_Index*2+1;
+      }
+      if(heap[cmp_Index]>tempdata){
+        swap(cmp_Index, tempindex);
+        cmp_Index=tempindex;
+      }
+      else break;
+    }
+    else if(cmp_Index*2<=Index && heap[cmp_Index*2]!=0){ // 왼쪽 자식만 있을경우
+      if(heap[cmp_Index]>heap[cmp_Index*2]){
+        swap(cmp_Index,cmp_Index*2);
+        cmp_Index=cmp_Index*2; 
+        }
+      else break;
+    }
+    else break;
+  }
+  return data;
+}
+
+void Print_Heap(){
+  printf("\n");
+  int horse=1;
+  while(horse<=Index && heap[horse]!=0){
+    printf("%d ",heap[horse]);
+    horse++;
+  }
+}
+
+int main(void) {
+  scanf("%d ",&N);
+  int a;
+  heap=(int *)malloc(sizeof(int)*(N+1));
+  for(int i=0;i<N;i++){
+    scanf("%d ",&a);
+    if(a!=0)insert(a);
+    else printf("%d\n",Delete());
+  }
+}
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #2021.04.28
 //힙을 배우기는 했지만 실제로 구현해보지않아서 최소힙을 한번 구현해보고 돌아오겠다.
+#2021.05.03
+//힙을 배우고 머리속으로 다시 생각하며 혼자만들어 봤다.
+#1차시도(성공!!)
