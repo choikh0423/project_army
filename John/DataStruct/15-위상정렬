@@ -10,158 +10,37 @@
 -----------------------------------------------------------------------------------------------------------------------------
 #내코드
 #include <stdio.h>
-#include <stdlib.h>
+#include<stdlib.h>
 
-typedef struct node{
-    int value;
-    struct node *next;
-}node;
-
-typedef struct Que{
-    node *head;
-    node *front;
-    node *rear;
-}Que;
-
-Que *Q=NULL;
-
-node* create_node(int value){ //노드 생성
-    node *newnode=(node*)malloc(sizeof(node));
-    newnode->value=value;
-    newnode->next=NULL;
-    return newnode;
-}
-
-void Enqueue(int value){//젤 뒤 노드에 붙여준다.
-    node *newnode=create_node(value);
-    if(Q->front==NULL){
-        Q->head=newnode;
-        Q->front=newnode;
-        Q->rear=newnode;
-        return;
-    }
-    else{
-        Q->rear->next=newnode;
-        Q->rear=newnode;
-        return;
-    }
-}
-int Dequeue(){//젤앞노드것을 뺀다.
-    if(Q->front==NULL){
-        printf("아무것도 없습니다.\n");
-        return -1;
-    }
-    int value;
-    node *old_front;
-    old_front=Q->front;
-    value=Q->front->value;
-    Q->head=Q->head->next;
-    Q->front=Q->front->next;
-    free(old_front);
-    return value;
-}
-
-int peak(){//젤 앞의 값을 보여줌
-    if(Q->front==NULL){
-        printf("아무것도 없습니다.\n");
-    }
-    return Q->front->value;
-}
+#define Max 4
 
 typedef struct Node{
   int vertex;
-  int enter_edge;
-  struct Node *next;
+  struct Node* next;
 }Node;
 
-typedef struct Grape{
-  Node **grape;
-  int *enter_cnt;
-}Grape;
+typedef struct Graph{
+  Node **graph;
+  int cnt;
+}Graph;
 
-Grape *H;
- int N=3;
-int M=2;
+Graph *G;
 
-Node* Create_Node(int a){
-  Node *newNode=(Node*)malloc(sizeof(Node));
-  newNode->enter_edge=0;
-  newNode->vertex=a;
-  newNode->next=NULL;
-  return newNode;
-}
-
-void add(int a,int b){
-  Node* newNode=Create_Node(b);
-  newNode->next=H->grape[a];
-  H->grape[a]=newNode;
-  H->enter_cnt[b]++;
-}
-
-void print_Graph(){
-    Node *horse;
-    for(int i=1;i<=N;i++){
-        horse=H->grape[i];
-        printf("정점[%d]->",i);
-        while(horse!=NULL){
-            printf("%d-> ",horse->vertex);
-            horse=horse->next;
-        }
-        printf("\n");
-    }
+void addvertex(){
+  if(G->cnt>=Max){
+    printf("초과\n");
     return;
-}
-
-void topological_sort(){
-  Node *horse;
-  Node *horse2;
-  for(int i=1;i<=N;i++){
-    if(H->enter_cnt[i]==0){
-      Enqueue(i);
-      horse=H->grape[i];
-      while(horse){
-        printf("101\n");
-        H->enter_cnt[horse->vertex]--;
-        horse=horse->next;
-      }
-    }
   }
-  while(Q->front!=NULL){
-    for(int i=1;i<=N;i++){
-      printf("10\n");
-      horse=H->grape[peak()];
-      //printf("체크\n");
-      if(H->enter_cnt[horse->vertex]==0){
-        printf("체크\n");
-        printf("20\n");
-        Enqueue(horse->vertex);
-        horse2=horse;
-        while(horse2){
-         printf("30\n");
-         H->enter_cnt[horse2->vertex]--;
-         horse2=horse2->next;
-       }
-        //앤큐한 벌텍스의 인접벌텍스들도 enter_cnt--해줘야함.
-      }
-      printf("%d\n",Dequeue());
-    }
-  }
+  G->cnt++;
 }
-
 
 int main(void) {
-  H=(Grape*)malloc(sizeof(Grape));
-  Q=(Que*)malloc(sizeof(Que));
- 
-  H->grape=(Node**)malloc(sizeof(Node*)*(N+1));
-  H->enter_cnt=(int *)malloc(sizeof(int)*(N+1));
-  int a,b;
-  for(int i=0;i<M;i++){
-    scanf("%d %d",&a,&b);
-    add(a,b);
+  printf("Hello World\n");
+  
+  G=(Graph*)malloc(sizeof(Graph));
+  for(int i=0;i<Max;i++){
+    addvertex();
   }
-  print_Graph();
-  topological_sort();
   return 0;
 }
 -----------------------------------------------------------------------------------------------------------------------------
@@ -174,3 +53,5 @@ int main(void) {
 //첫노드로 돌아오면 그다음 갈림길로 가서 다시 끝노드부터 출력한다. 단, 이미 출력한노드는 무시한다.
 //모든 노드의 갈림길에 적용된다.
 //그렇게 출력한 문자들의 역을 적용하면, 놀랍게도 순서가 맞다.
+#2021.05.09
+//다 지우고 그래프생성부터 만드는중
